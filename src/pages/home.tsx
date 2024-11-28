@@ -1,5 +1,5 @@
 import { motion } from "framer-motion"
-import { LinkButton } from "../components/linkButtons"
+import { LinkButton } from "../components/buttons/linkButtons"
 export const Home = () =>{
     return (
         <article className="w-full
