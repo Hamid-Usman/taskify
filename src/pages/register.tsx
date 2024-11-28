@@ -1,17 +1,18 @@
-import React, { useState } from "react";
+
 import { Button } from "../components/button";
 
-interface AuthProps {
+/*interface AuthProps {
     email: string;
     password: string;
     confirm_password: string
-}
+}*/
 export const Register: React.FC =() => {
-    const [authData, setAuthData] = useState<AuthProps> ({
+    /* const [authData, setAuthData] = useState<AuthProps> ({
         email: '',
         password: '',
         confirm_password: '',
     })
+    */
 
     return (
         <form className="w-[340px] md:w-[420px] p-5 flex flex-col gap-5
