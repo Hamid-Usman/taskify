@@ -6,7 +6,7 @@ import { Button } from "../components/buttons/button";
     password: string;
     confirm_password: string
 }*/
-export const Register: React.FC =() => {
+export const Register = () => {
     /* const [authData, setAuthData] = useState<AuthProps> ({
         email: '',
         password: '',
