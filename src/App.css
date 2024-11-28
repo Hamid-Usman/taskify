@@ -7,5 +7,5 @@
 }
 body{
   color: whitesmoke;
-  @apply bg-secondary
+  @apply bg-secondary w-full h-[100vh] flex justify-center items-center
 }

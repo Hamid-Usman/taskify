@@ -1,11 +1,11 @@
 import { motion } from "framer-motion"
-import { LinkButton } from "../components/buttons"
+import { LinkButton } from "../components/linkButtons"
 export const Home = () =>{
     return (
-        <article className="w-full h-[100vh]
+        <article className="w-full
             flex flex-col gap-7 justify-center items-center
-            px-10 md:px-14 lg:px-[30%] text-center">
-                <h1 className="text-[27px] lg:text-[50px] font-bold ">
+            px-10 md:px-14 lg:px-[20%] text-center">
+                <h1 className="text-[30px] lg:text-[50px] font-bold">
                     Your Task Manager Sucks! Use <span className="text-primary">Taskify</span> Instead
                 </h1>
                 <p className="text-accent text-[18px]">
@@ -15,7 +15,7 @@ export const Home = () =>{
                 whileHover={{y: 10}}
                 transition={{duration: .6}}>
                     <LinkButton
-                        link="/"
+                        link="/register"
                     >
                         Get Started!
                     </LinkButton>
