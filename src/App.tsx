@@ -3,14 +3,15 @@ import './App.css'
 import { Home } from './pages/home';
 import { Register } from './pages/register'
 import { Index } from './pages/index';
-function App() {
+import React from 'react';
+const App: React.FC = () => {
 
 return (
     <Router>
         <Routes>
-            <Route path='home' element={<Home />} />
-            <Route path='register' element={<Register />} />
-            <Route path='' element={<Index />} />
+            <Route path='/' element={<Index />} />
+            <Route path='/home' element={<Home />} />
+            <Route path='/register' element={<Register />} />
         </Routes>
     </Router>
 )
