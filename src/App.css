@@ -3,10 +3,10 @@
 @tailwind components;
 @tailwind utilities;
 
+
 ::selection{
   @apply bg-primary text-accent
 }
 body{
-  color: whitesmoke;
-  @apply bg-secondary w-full h-[100vh] flex justify-center items-center
+  @apply bg-secondary text-accent w-full h-[100vh] flex justify-center items-center
 }
