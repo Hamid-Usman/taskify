@@ -6,7 +6,7 @@ export const Header = () => {
 
     return (
         <nav
-        className="px-3 py-[5px] border-b-[1px] border-accent_low
+        className="px-3 py-3 border-b-[1px] border-accent_low
                 flex justify-between items-center"
         >
         <div className="flex items-center gap-2">

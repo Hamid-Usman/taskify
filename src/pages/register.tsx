@@ -15,6 +15,7 @@ export const Register = () => {
     */
 
     return (
+        <div className="w-full h-[100vh] flex justify-center items-center">
         <form className="w-[340px] md:w-[420px] p-5 flex flex-col gap-5
             bg-accent_low bg-opacity-60 backdrop-blur-lg text-primary rounded-md">
             <div className="font-bold text-center mb-3 text-accent">
@@ -36,6 +37,6 @@ export const Register = () => {
             </div>
             <Button>Click</Button>
         
-        </form>
+        </form></div>
     ) 
 }

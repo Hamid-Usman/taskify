@@ -2,7 +2,7 @@ import { motion } from "framer-motion"
 import { LinkButton } from "../components/buttons/linkButtons"
 export const Index = () =>{
     return (
-        <article className="w-full
+        <article className="w-full h-[100vh]
             flex flex-col gap-7 justify-center items-center
             px-10 md:px-14 lg:px-[20%] text-center">
                 <h1 className="text-[30px] lg:text-[50px] font-bold">

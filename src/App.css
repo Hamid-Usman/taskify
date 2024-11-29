@@ -9,7 +9,7 @@
   @apply bg-primary text-accent
 }
 body{
-  @apply bg-secondary text-accent w-full h-[100vh] flex justify-center items-center
+  @apply bg-secondary text-accent 
 }
 @layer base {
   :root {
