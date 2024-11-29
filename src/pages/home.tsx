@@ -1,4 +1,4 @@
-import { UserBoards } from "../components/board/homeBoard"
+import { UserBoards } from "../components/board/boards"
 import { Header } from "../components/header/header"
 
 export const Home = () => {

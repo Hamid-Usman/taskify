@@ -1,8 +1,14 @@
 import { FaAngleUp } from "react-icons/fa";
-import { useEffect, useState, useRef } from "react";
-import { motion } from "framer-motion";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "../ui/dropdown-menu"
+
 
 export const ButtonsSmall = () => {
+    {/* 
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -25,24 +31,29 @@ export const ButtonsSmall = () => {
         document.removeEventListener("mousedown", handleClickOutside);
         };
     }, [isDropdownOpen]);
-
+*/}
     
     return (
         <>
         
-        <motion.button
-        whileTap={{ scale: 0.95 }}
-        onClick={toggleDropdown}
-        className="flex md:hidden hover:bg-primary_low p-2 px-5
-                        rounded-md text-sm"
-        >
-        More
-                <FaAngleUp 
-                className="rotate-180"
-                size={20}
-                />
-        </motion.button>
+        <DropdownMenu>
+            <DropdownMenuTrigger>
+                <div className="text-accent hover:bg-accent_low font-bold p-1 px-3
+                    rounded-md flex gap-2 items-center">
+                    More
+                    <FaAngleUp 
+                    className="rotate-180"
+                    size={20}/>
+                </div>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="text-accent w-[280px]">
+                <DropdownMenuItem>Workshop</DropdownMenuItem>
+                <DropdownMenuItem>Boards</DropdownMenuItem>
+            </DropdownMenuContent>
+        </DropdownMenu>
 
+        {/*
+        
         {isDropdownOpen && (
             
         <div
@@ -74,6 +85,7 @@ export const ButtonsSmall = () => {
             </button>
         </div>
         )}
+        */}
         </>
     )
 }

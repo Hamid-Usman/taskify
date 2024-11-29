@@ -11,3 +11,8 @@
 body{
   @apply bg-secondary text-accent w-full h-[100vh] flex justify-center items-center
 }
+@layer base {
+  :root {
+
+
+    --radius: 0.5rem}}
