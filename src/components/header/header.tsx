@@ -6,7 +6,7 @@ export const Header = () => {
 
     return (
         <nav
-        className="px-3 py-1 border-b-2 border-primary
+        className="px-3 py-1 border-b-[1px] border-accent_low
                 flex justify-between items-center"
         >
         <div className="flex items-center gap-2">
@@ -41,7 +41,7 @@ export const Header = () => {
             {/* End of small screen button */}
 
             <button
-            className="bg-primary px-4
+            className="bg-primary text-secondary px-4
                         rounded-md text-2xl font-bold"
             >
             +

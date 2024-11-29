@@ -16,10 +16,10 @@ export const Register = () => {
 
     return (
         <form className="w-[340px] md:w-[420px] p-5 flex flex-col gap-5
-            bg-white bg-opacity-60 backdrop-blur-lg text-primary rounded-md">
-            <div className="font-bold text-center mb-3">
+            bg-accent_low bg-opacity-60 backdrop-blur-lg text-primary rounded-md">
+            <div className="font-bold text-center mb-3 text-accent">
                 <h1 className="text-[30px] font-bold">Register</h1>
-                <p className="text[18px] sm:text-[20px] font-bold text-secondary "
+                <p className="text[18px] sm:text-[20px] font-bold"
                 >
                     Create an account to get started
                 </p>

@@ -6,14 +6,16 @@ export default {
   ],
   theme: {
     colors: {
-      primary: '#9A00BD', //grape
-      accent: '#BEBFC5', //battleship gray
-      accent_low: '#bebfc563',
-      secondary: '#010B13', //rich dark
+      primary: '#F28F3B', //grape
+      accent: '#9DB4C0', //battleship gray
+      accent_low: '#3C484E',
+      secondary: '#1B2228', //rich dark
       white: '#F7F7F7', //seasalt
-      primary_low: '#592a85'
+      gray: '#545454',
+      primary_low: '#f2903bd5'
     },
     extend: {},
   }
 }
 
+//#5B85AA
