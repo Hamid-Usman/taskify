@@ -9,7 +9,8 @@
   @apply bg-primary text-accent
 }
 body{
-  @apply bg-secondary text-accent 
+  color: #9db4c027;
+  @apply bg-secondary w-[100vw] text-accent 
 }
 @layer base {
   :root {

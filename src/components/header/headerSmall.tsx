@@ -5,6 +5,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "../ui/dropdown-menu"
+import { Link } from "react-router-dom";
 
 
 export const ButtonsSmall = () => {
@@ -48,7 +49,10 @@ export const ButtonsSmall = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent className="text-accent w-[280px]">
                 <DropdownMenuItem>Workshop</DropdownMenuItem>
-                <DropdownMenuItem>Boards</DropdownMenuItem>
+                <Link to='/board' className="hover:bg-secondary">
+                <DropdownMenuItem>Boards
+                </DropdownMenuItem>
+                </Link>
             </DropdownMenuContent>
         </DropdownMenu>
 
