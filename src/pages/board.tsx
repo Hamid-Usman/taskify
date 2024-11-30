@@ -9,7 +9,8 @@ export const Board = () => {
             <Header />
             <BoardHeader />
 
-            <section className="p-4 absolute top-28 gap-3 max-h-fit flex items-start w-fit overflow-hidden">
+            <div className="board absolute top-28 w-full overflow-x-auto">
+            <section className="p-4 flex gap-3 w-max items-start">
                 <article className="w-[300px] flex flex-col bg-[#010B13] rounded-lg p-3">
                     <h1 className="font-semibold text-md mb-3">Backlog</h1>
                     <div className="bg-accent_low p-2 mb-2 text-[16px] rounded-lg hover:border-[1px] border-accent">
@@ -66,6 +67,7 @@ export const Board = () => {
                     </Button>
                 </article>
             </section>
+            </div>
 
         </>
         
