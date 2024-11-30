@@ -35,7 +35,7 @@ export const ButtonsSmall = () => {
 */}
     
     return (
-        <>
+        <div className="md:hidden">
         
         <DropdownMenu>
             <DropdownMenuTrigger>
@@ -90,6 +90,6 @@ export const ButtonsSmall = () => {
         </div>
         )}
         */}
-        </>
+        </div>
     )
 }
