@@ -3,6 +3,9 @@
 @tailwind components;
 @tailwind utilities;
 
+.board::-webkit-scrollbar {
+  display: none;
+}
 
 ::selection{
   
