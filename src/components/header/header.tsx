@@ -8,8 +8,8 @@ export const Header = () => {
 
     return (
         <nav
-        className="px-3 py-2 md:py-1 top-0 fixed w-screen max-w-full border-b border-accent_low
-            flex justify-between items-center z-50"
+        className="px-3 py-2 md:py-1 fixed top-0 w-[100vw] border-b-[1px] border-accent_low
+                flex justify-between items-center z-50"
         >
         <div className="flex items-center gap-2">
             <div className="p-2 bg-primary_low transition duration-300
