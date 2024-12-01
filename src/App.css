@@ -13,6 +13,7 @@
 }
 body{
   color: #9db4c027;
+  overflow-x: auto;
   @apply bg-secondary text-accent 
 }
 @layer base {

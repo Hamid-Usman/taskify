@@ -67,15 +67,6 @@ export const Board = () => {
                     </Button>
                 </article>
                 
-                <article className="w-[300px] flex flex-col bg-[#010B13] rounded-lg p-3">
-                    <Button>
-                        <div className="flex gap-2 items-center">
-                            <FaPlus />
-                            Create new board
-                        </div>
-                    </Button>
-                </article>
-                
                 <div className="w-[300px] flex flex-col bg-[#010B13] rounded-lg p-3">
                     <Button>
                         <div className="flex gap-2 items-center">
