@@ -13,7 +13,7 @@
 }
 body{
   color: #9db4c027;
-  @apply bg-secondary w-[100vw] text-accent 
+  @apply bg-secondary text-accent 
 }
 @layer base {
   :root {
