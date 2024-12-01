@@ -9,7 +9,7 @@ export const Board = () => {
             <Header />
             <BoardHeader />
 
-            <div className="board absolute top-24 w-max overflow-x-visible">
+            <div className="board relative top-24 overflow-x-visible">
             <section className="p-4 flex gap-3 w-max items-start">
                 <article className="w-[300px] flex flex-col bg-[#010B13] rounded-lg p-3">
                     <h1 className="font-semibold text-md mb-3">Backlog</h1>
