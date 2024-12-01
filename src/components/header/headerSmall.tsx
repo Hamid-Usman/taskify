@@ -48,11 +48,10 @@ export const ButtonsSmall = () => {
                 </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="text-accent w-[280px]">
-                <DropdownMenuItem>Workshop</DropdownMenuItem>
                 <Link to='/board' className="hover:bg-secondary">
-                <DropdownMenuItem>Boards
-                </DropdownMenuItem>
+                    <DropdownMenuItem>Workshop</DropdownMenuItem>
                 </Link>
+                <DropdownMenuItem>Boards</DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
 
