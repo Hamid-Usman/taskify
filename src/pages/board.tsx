@@ -9,37 +9,37 @@ export const Board = () => {
             <Header />
             <BoardHeader />
 
-            <div className="board absolute top-28 w-full overflow-x-auto">
+            <div className="board absolute top-28 w-full overflow-x-visible">
             <section className="p-4 flex gap-3 w-max items-start">
                 <article className="w-[300px] flex flex-col bg-[#010B13] rounded-lg p-3">
                     <h1 className="font-semibold text-md mb-3">Backlog</h1>
-                    <div className="bg-accent_low p-2 mb-2 text-[16px] rounded-lg hover:border-[1px] border-accent">
+                    <div className="bg-accent_low p-2 mb-2 text-[13px] sm:text-[14px] rounded-lg hover:border-[1px] border-accent">
                         Implement drag and drop
                     </div>
-                    <div className="bg-accent_low p-2 mb-2 text-[16px] rounded-lg hover:border-[1px] border-accent">
+                    <div className="bg-accent_low p-2 mb-2 text-[13px] sm:text-[14px] rounded-lg hover:border-[1px] border-accent">
                         Build the Backend
                     </div>
 
                     <Button>
                         <div className="flex gap-2 items-center">
                             <FaPlus />
-                            Create new
+                            Add new card
                         </div>
                     </Button>
                 </article>
                 <article className="w-[300px] flex flex-col bg-[#010B13] rounded-lg p-3">
                     <h1 className="font-semibold text-md mb-3">In Progress</h1>
-                    <div className="bg-accent_low p-2 mb-2 text-[16px] rounded-lg hover:border-[1px] border-accent">
+                    <div className="bg-accent_low p-2 mb-2 text-[13px] sm:text-[14px] rounded-lg hover:border-[1px] border-accent">
                         Implement drag and drop functionality
                     </div>
-                    <div className="bg-accent_low p-2 mb-2 text-[16px] rounded-lg hover:border-[1px] border-accent">
+                    <div className="bg-accent_low p-2 mb-2 text-[13px] sm:text-[14px] rounded-lg hover:border-[1px] border-accent">
                         build forms for creating tasks and boards
                     </div>
 
                     <Button>
                         <div className="flex gap-2 items-center">
                             <FaPlus />
-                            Create new
+                            Add new card
                         </div>
                     </Button>
                 </article>
@@ -49,20 +49,29 @@ export const Board = () => {
                     <Button>
                         <div className="flex gap-2 items-center">
                             <FaPlus />
-                            Create new
+                            Add new card
                         </div>
                     </Button>
                 </article>
                 <article className="w-[300px] flex flex-col bg-[#010B13] rounded-lg p-3">
                     <h1 className="font-semibold text-md mb-3">Done</h1>
-                    <div className="bg-accent_low p-2 mb-2 text-[16px] rounded-lg hover:border-[1px] border-accent">
+                    <div className="bg-accent_low p-2 mb-2 text-[13px] sm:text-[14px] rounded-lg hover:border-[1px] border-accent">
                         Structure mini header for Board Title
                     </div>
 
                     <Button>
                         <div className="flex gap-2 items-center">
                             <FaPlus />
-                            Create new
+                            Add new card
+                        </div>
+                    </Button>
+                </article>
+                
+                <article className="w-[300px] flex flex-col bg-[#010B13] rounded-lg p-3">
+                    <Button>
+                        <div className="flex gap-2 items-center">
+                            <FaPlus />
+                            Create new board
                         </div>
                     </Button>
                 </article>
