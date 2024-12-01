@@ -9,9 +9,10 @@ export const Board = () => {
             <Header />
             <BoardHeader />
 
-            <div className="absolute top-28">
-            <section className="p-4 flex gap-3 items-start overflow-x-auto">
-                <article className="w-[300px] flex flex-col bg-[#010B13] rounded-lg p-3">
+            <div className="absolute top-28 w-full">
+            <section className="p-4 flex gap-3 w-full items-start
+                 board-overflow pb-60">
+                <article className="min-w-[272px] flex flex-col bg-[#010B13] rounded-lg p-3">
                     <h1 className="font-semibold text-md mb-3">Backlog</h1>
                     <div className="bg-accent_low p-2 mb-2 text-[13px] sm:text-[14px] rounded-lg hover:border-[1px] border-accent">
                         Implement drag and drop
@@ -27,7 +28,7 @@ export const Board = () => {
                         </div>
                     </Button>
                 </article>
-                <article className="w-[300px] flex flex-col bg-[#010B13] rounded-lg p-3">
+                <article className="min-w-[272px] flex flex-col bg-[#010B13] rounded-lg p-3">
                     <h1 className="font-semibold text-md mb-3">In Progress</h1>
                     <div className="bg-accent_low p-2 mb-2 text-[13px] sm:text-[14px] rounded-lg hover:border-[1px] border-accent">
                         Implement drag and drop functionality
@@ -43,7 +44,7 @@ export const Board = () => {
                         </div>
                     </Button>
                 </article>
-                <article className="w-[300px] flex flex-col bg-[#010B13] rounded-lg p-3">
+                <article className="min-w-[272px] flex flex-col bg-[#010B13] rounded-lg p-3">
                     <h1 className="font-semibold text-md mb-3">Testing (God abeg🤲🏾)</h1>
 
                     <Button>
@@ -53,7 +54,7 @@ export const Board = () => {
                         </div>
                     </Button>
                 </article>
-                <article className="w-[300px] flex flex-col bg-[#010B13] rounded-lg p-3">
+                <article className="min-w-[272px] flex flex-col bg-[#010B13] rounded-lg p-3">
                     <h1 className="font-semibold text-md mb-3">Done</h1>
                     <div className="bg-accent_low p-2 mb-2 text-[13px] sm:text-[14px] rounded-lg hover:border-[1px] border-accent">
                         Structure mini header for Board Title
@@ -67,7 +68,7 @@ export const Board = () => {
                     </Button>
                 </article>
                 
-                <div className="w-[300px] flex flex-col bg-[#010B13] rounded-lg p-3">
+                <div className="min-w-[282px] flex flex-col bg-[#010B13] rounded-lg p-3">
                     <Button>
                         <div className="flex gap-2 items-center">
                             <FaPlus />

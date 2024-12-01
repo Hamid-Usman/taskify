@@ -3,17 +3,38 @@
 @tailwind components;
 @tailwind utilities;
 
-.board::-webkit-scrollbar {
-  display: none;
+.board-overflow{
+  @apply overflow-x-auto
+  
 }
 
+::-webkit-scrollbar {
+  width: 10px;
+  height: 5px;
+  top: 20px
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+
+  @apply bg-accent_low pt-20
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  @apply bg-accent
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
 ::selection{
   
   @apply bg-primary text-accent
 }
 body{
   color: #9db4c027;
-  overflow-x: visible;
   @apply bg-secondary text-accent 
 }
 @layer base {
