@@ -14,7 +14,7 @@ export const Home = () => {
                             flex flex-col justify-center items-center
                             text-[35px] text-secondary font-bold"
                             >
-                                H
+                                A
                         </div>
                         <div>
                             <h1 className="font-bold text-xl">Endurecido</h1>
