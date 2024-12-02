@@ -11,6 +11,7 @@ export const BoardInput = ({ initialTitle, onSave }: { initialTitle: string, onS
 
     const handleHide = () => {
         setEditing(false)
+        onSave(content)
     }
 
     const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
