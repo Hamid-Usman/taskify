@@ -84,50 +84,71 @@ import { BoardInput } from "../components/board/boardInput";
             setColumnTitle(newTitle)
         }
     
-        const handleDragStart = (e: DragEvent, card: CardType) => {
-        e.dataTransfer.setData("cardId", card.id);
+        const handleDragStart = (e: DragEvent | TouchEvent, card: CardType) => {
+            if (isDragEvent(e)) {
+                e.dataTransfer.setData("cardId", card.id);
+            }
+        };
+
+        // Type guards for DragEvent and TouchEvent
+        const isDragEvent = (e: DragEvent | TouchEvent): e is DragEvent => {
+            return 'dataTransfer' in e;
+        };
+
+        const isTouchEvent = (e: DragEvent | TouchEvent): e is TouchEvent => {
+            return 'touches' in e;
         };
     
-        const handleDragEnd = (e: DragEvent) => {
-        const cardId = e.dataTransfer.getData("cardId");
+        const handleDragEnd = (e: DragEvent | TouchEvent) => {
+        if(isDragEvent(e)) {
+            const cardId = e.dataTransfer.getData("cardId");
     
-        setActive(false);
-        clearHighlights();
-    
-        const indicators = getIndicators();
-        const { element } = getNearestIndicator(e, indicators);
-    
-        const before = element.dataset.before || "-1";
-    
-        if (before !== cardId) {
-            let copy = [...cards];
-    
-            let cardToTransfer = copy.find((c) => c.id === cardId);
-            if (!cardToTransfer) return;
-            cardToTransfer = { ...cardToTransfer, column };
-    
-            copy = copy.filter((c) => c.id !== cardId);
-    
-            const moveToBack = before === "-1";
-    
-            if (moveToBack) {
-            copy.push(cardToTransfer);
-            } else {
-            const insertAtIndex = copy.findIndex((el) => el.id === before);
-            if (insertAtIndex === undefined) return;
-    
-            copy.splice(insertAtIndex, 0, cardToTransfer);
+            setActive(false);
+            clearHighlights();
+        
+            const indicators = getIndicators();
+            const { element } = getNearestIndicator(e, indicators);
+        
+            const before = element.dataset.before || "-1";
+        
+            if (before !== cardId) {
+                let copy = [...cards];
+        
+                let cardToTransfer = copy.find((c) => c.id === cardId);
+                if (!cardToTransfer) return;
+                cardToTransfer = { ...cardToTransfer, column };
+        
+                copy = copy.filter((c) => c.id !== cardId);
+        
+                const moveToBack = before === "-1";
+        
+                if (moveToBack) {
+                copy.push(cardToTransfer);
+                } else {
+                const insertAtIndex = copy.findIndex((el) => el.id === before);
+                if (insertAtIndex === undefined) return;
+        
+                copy.splice(insertAtIndex, 0, cardToTransfer);
+                }
+        
+                setCards(copy);
             }
-    
-            setCards(copy);
         }
         };
     
-        const handleDragOver = (e: DragEvent) => {
-        e.preventDefault();
-        highlightIndicator(e);
-    
-        setActive(true);
+        const handleDragOver = (e: DragEvent | TouchEvent) => {
+            
+            e.preventDefault();
+
+            if (isDragEvent(e)) {
+                highlightIndicator(e);
+                setActive(true);
+            } else if (isTouchEvent(e)) {
+                const touch = e.touches[0];
+                const clientY = touch.clientY; // Access clientY for TouchEvent
+                // Handle touch-related logic with clientY
+                console.log("Touch position:", clientY);
+            }
         };
     
         const clearHighlights = (els?: HTMLElement[]) => {
@@ -138,7 +159,7 @@ import { BoardInput } from "../components/board/boardInput";
         });
         };
     
-        const highlightIndicator = (e: DragEvent) => {
+        const highlightIndicator = (e: DragEvent | TouchEvent) => {
         const indicators = getIndicators();
     
         clearHighlights(indicators);
@@ -148,24 +169,37 @@ import { BoardInput } from "../components/board/boardInput";
         el.element.style.opacity = "1";
         };
     
-        const getNearestIndicator = (e: DragEvent, indicators: HTMLElement[]) => {
+        const getNearestIndicator = (e: DragEvent | TouchEvent, indicators: HTMLElement[]) => {
         const DISTANCE_OFFSET = 50;
+        let clientY: number;
+
+
+        if (isDragEvent(e)) {
+            clientY = e.clientY; // DragEvent uses clientY directly
+        } else if (isTouchEvent(e)) {
+            const touch = e.touches[0];
+            clientY = touch.clientY; // TouchEvent uses touches[0].clientY
+        } else {
+            return {
+                offset: Number.NEGATIVE_INFINITY,
+                element: indicators[indicators.length - 1],
+            };
+        }
     
         const el = indicators.reduce(
             (closest, child) => {
-            const box = child.getBoundingClientRect();
+                const box = child.getBoundingClientRect();
+                const offset = clientY - (box.top + DISTANCE_OFFSET);
     
-            const offset = e.clientY - (box.top + DISTANCE_OFFSET);
-    
-            if (offset < 0 && offset > closest.offset) {
-                return { offset: offset, element: child };
-            } else {
-                return closest;
-            }
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset, element: child };
+                } else {
+                    return closest;
+                }
             },
             {
-            offset: Number.NEGATIVE_INFINITY,
-            element: indicators[indicators.length - 1],
+                offset: Number.NEGATIVE_INFINITY,
+                element: indicators[indicators.length - 1],
             }
         );
     
