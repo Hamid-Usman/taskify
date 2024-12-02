@@ -1,7 +1,7 @@
 import React, { useState, useRef, ChangeEvent, KeyboardEvent } from "react"
-export const BoardInput = () => {
+export const BoardInput = ({ initialTitle, onSave }: { initialTitle: string, onSave: (newTitle: string) => void }) => {
     const [editing, setEditing] = useState<Boolean>(false)
-    const [content, setContent] = useState<string>('Backlog')
+    const [content, setContent] = useState<string>(initialTitle)
     const textRef = useRef<HTMLTextAreaElement>(null)
     const hRef = useRef<HTMLHeadingElement>(null)
 
@@ -11,6 +11,7 @@ export const BoardInput = () => {
 
     const handleHide = () => {
         setEditing(false)
+        onSave(content)
     }
 
     const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
@@ -36,12 +37,12 @@ export const BoardInput = () => {
         };
     }, []);
     return (
-        <div className="w-100 mb-5  ">
+        <div className="w-full">
             {editing ? (
                 
             <textarea
             ref={textRef}
-            className="w-full h-[30px] text-start px-2 rounded-md"
+            className="w-full h-[30px] text-start px-2 rounded-md bg-primary_low text-primary focus:outline-8 border"
             value={content}
             onChange={handleChange}
             onBlur={handleHide}
@@ -51,7 +52,7 @@ export const BoardInput = () => {
             
             <h1
             ref={hRef}
-            className="hover:bg-accent_low rounded-md px-2"
+            className="hover:bg-accent_low h-[30px] rounded-md px-2 flex items-center"
             onClick={handleClick}>
                 {content}
             </h1>
