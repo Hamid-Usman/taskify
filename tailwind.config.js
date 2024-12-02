@@ -14,7 +14,7 @@ export default {
 		secondary_low: '#9db4c027',
 		white: '#F7F7F7',
 		gray: '#545454',
-		primary_low: '#f2903bd5'
+		primary_low: '#f2903b1e'
 	},
 	extend: {
 		borderRadius: {
