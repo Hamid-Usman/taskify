@@ -79,6 +79,7 @@ import { BoardInput } from "../components/board/boardInput";
     }: ColumnProps) => {
         const [active, setActive] = useState(false);
         const [columnTitle, setColumnTitle] = useState(title)
+        const [draggedCardId, setDraggedCardId] = useState<string | null>(null);
 
         const handleTitleSave = (newTitle: string) => {
             setColumnTitle(newTitle)
@@ -87,6 +88,8 @@ import { BoardInput } from "../components/board/boardInput";
         const handleDragStart = (e: DragEvent | TouchEvent, card: CardType) => {
             if (isDragEvent(e)) {
                 e.dataTransfer.setData("cardId", card.id);
+            } else if (isTouchEvent(e)) {
+                setDraggedCardId(card.id);
             }
         };
 
@@ -100,9 +103,17 @@ import { BoardInput } from "../components/board/boardInput";
         };
     
         const handleDragEnd = (e: DragEvent | TouchEvent) => {
-        if(isDragEvent(e)) {
-            const cardId = e.dataTransfer.getData("cardId");
-    
+            let cardId = "";
+        
+            if (isDragEvent(e)) {
+                cardId = e.dataTransfer.getData("cardId");
+            } else if (isTouchEvent(e)) {
+                cardId = draggedCardId || "";
+                setDraggedCardId(null);
+            }
+        
+            if (!cardId) return;
+        
             setActive(false);
             clearHighlights();
         
@@ -123,33 +134,34 @@ import { BoardInput } from "../components/board/boardInput";
                 const moveToBack = before === "-1";
         
                 if (moveToBack) {
-                copy.push(cardToTransfer);
+                    copy.push(cardToTransfer);
                 } else {
-                const insertAtIndex = copy.findIndex((el) => el.id === before);
-                if (insertAtIndex === undefined) return;
+                    const insertAtIndex = copy.findIndex((el) => el.id === before);
+                    if (insertAtIndex === undefined) return;
         
-                copy.splice(insertAtIndex, 0, cardToTransfer);
+                    copy.splice(insertAtIndex, 0, cardToTransfer);
                 }
         
                 setCards(copy);
             }
-        }
         };
+        
     
         const handleDragOver = (e: DragEvent | TouchEvent) => {
-            
             e.preventDefault();
-
+        
             if (isDragEvent(e)) {
                 highlightIndicator(e);
                 setActive(true);
             } else if (isTouchEvent(e)) {
                 const touch = e.touches[0];
-                const clientY = touch.clientY; // Access clientY for TouchEvent
-                // Handle touch-related logic with clientY
-                console.log("Touch position:", clientY);
+                highlightIndicator({
+                    clientX: touch.clientX,
+                    clientY: touch.clientY,
+                } as DragEvent);
             }
         };
+        
     
         const clearHighlights = (els?: HTMLElement[]) => {
         const indicators = els || getIndicators();
@@ -170,41 +182,45 @@ import { BoardInput } from "../components/board/boardInput";
         };
     
         const getNearestIndicator = (e: DragEvent | TouchEvent, indicators: HTMLElement[]) => {
-        const DISTANCE_OFFSET = 50;
-        let clientY: number;
-
-
-        if (isDragEvent(e)) {
-            clientY = e.clientY; // DragEvent uses clientY directly
-        } else if (isTouchEvent(e)) {
-            const touch = e.touches[0];
-            clientY = touch.clientY; // TouchEvent uses touches[0].clientY
-        } else {
-            return {
-                offset: Number.NEGATIVE_INFINITY,
-                element: indicators[indicators.length - 1],
-            };
-        }
-    
-        const el = indicators.reduce(
-            (closest, child) => {
-                const box = child.getBoundingClientRect();
-                const offset = clientY - (box.top + DISTANCE_OFFSET);
-    
-                if (offset < 0 && offset > closest.offset) {
-                    return { offset, element: child };
-                } else {
-                    return closest;
-                }
-            },
-            {
-                offset: Number.NEGATIVE_INFINITY,
-                element: indicators[indicators.length - 1],
+            const DISTANCE_OFFSET = 50;
+        
+            // Declare `clientY` outside the condition
+            let clientY: number;
+        
+            if (isDragEvent(e)) {
+                clientY = e.clientY; // DragEvent uses clientY directly
+            } else if (isTouchEvent(e)) {
+                const touch = e.touches[0];
+                clientY = touch.clientY; // TouchEvent uses touches[0].clientY
+            } else {
+                // Fallback for unexpected event types
+                return {
+                    offset: Number.NEGATIVE_INFINITY,
+                    element: indicators[indicators.length - 1],
+                };
             }
-        );
-    
-        return el;
+        
+            const el = indicators.reduce(
+                (closest, child) => {
+                    const box = child.getBoundingClientRect();
+                    const offset = clientY - (box.top + DISTANCE_OFFSET);
+        
+                    if (offset < 0 && offset > closest.offset) {
+                        return { offset, element: child };
+                    } else {
+                        return closest;
+                    }
+                },
+                {
+                    offset: Number.NEGATIVE_INFINITY,
+                    element: indicators[indicators.length - 1],
+                }
+            );
+        
+            return el;
         };
+        
+        
     
         const getIndicators = () => {
         return Array.from(
@@ -401,7 +417,7 @@ import { BoardInput } from "../components/board/boardInput";
     const DEFAULT_CARDS: CardType[] = [
         // BACKLOG
         { title: "Keep going down", id: "1", column: "backlog" },
-        { title: "Pray", id: "2", column: "backlog" },
+        { title: "Pray", id: "2", column: "in progress" },
         { title: "Document 2 API", id: "4", column: "backlog" },
         { title: '"Brodamid, hotspot my WiFi👼🏼"', id: "5", column: "backlog" },
         // TODO
@@ -417,7 +433,7 @@ import { BoardInput } from "../components/board/boardInput";
         id: "8",
         column: "in progress",
         },
-        { title: "50 pushups", id: "3", column: "in progress" },
+        { title: "50 pushups", id: "3", column: "done" },
         // DONE
         {
         title: "Survive the day",

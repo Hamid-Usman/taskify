@@ -1,4 +1,5 @@
 import React, { useState, useRef, ChangeEvent, KeyboardEvent } from "react"
+import { FaPen } from "react-icons/fa6"
 export const BoardInput = ({ initialTitle, onSave }: { initialTitle: string, onSave: (newTitle: string) => void }) => {
     const [editing, setEditing] = useState<Boolean>(false)
     const [content, setContent] = useState<string>(initialTitle)
@@ -49,13 +50,18 @@ export const BoardInput = ({ initialTitle, onSave }: { initialTitle: string, onS
             onKeyDown={handleKeyDown}
             />
             ): (
-            
-            <h1
-            ref={hRef}
-            className="hover:bg-accent_low h-[30px] rounded-md px-2 flex items-center"
-            onClick={handleClick}>
-                {content}
-            </h1>
+            <div
+                ref={hRef}
+                onClick={handleClick}
+                className="h-[30px] rounded-md flex justify-between items-center px-2 hover:bg-accent_low ">
+                
+                <h1
+                className=" flex items-center"
+                >
+                    {content}
+                </h1>
+                    <FaPen/>
+            </div>
             )}
         </div>
     )
