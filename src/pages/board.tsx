@@ -1,10 +1,13 @@
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { Header } from "../components/header/header";
 import { BoardHeader } from "../components/header/boardHeader";
 import { CardType, column as columns} from "../props/cardColumn";
 import { Column } from "../components/board/columns";
 import { DragEndEvent } from "@dnd-kit/core";
 import { DndContext } from "@dnd-kit/core";
+import { AddCardProps } from "../props/cardProps";
+import { motion } from "framer-motion";
+import { FiPlus } from "react-icons/fi";
 
 
 const COLUMNS: columns[] = [
@@ -88,6 +91,7 @@ export const DEFAULT_CARDS: CardType[] = [
                     title={column.title}
                     column={column.id}
                     cards={cards.filter((card) => card.status === column.id)}
+                    setCards={setCards}
                     />
             ))}
             </DndContext>
@@ -100,7 +104,7 @@ export const DEFAULT_CARDS: CardType[] = [
     
     
 
-{/*    export const AddCard = ({ column, setCards }: AddCardProps) => {
+    export const AddCard = ({ column, setCards }: AddCardProps) => {
         const [text, setText] = useState("");
         const [adding, setAdding] = useState(false);
     
@@ -110,7 +114,7 @@ export const DEFAULT_CARDS: CardType[] = [
         if (!text.trim().length) return;
     
         const newCard = {
-            column,
+            status: column,
             title: text.trim(),
             id: Math.random().toString(),
         };
@@ -160,4 +164,3 @@ export const DEFAULT_CARDS: CardType[] = [
         );
     };
     
-    */}

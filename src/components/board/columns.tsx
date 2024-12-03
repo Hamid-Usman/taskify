@@ -4,18 +4,21 @@ import { BoardInput } from "./boardInput";
 import { DropIndicator } from "./utils/dropIndicator";
 import { Card } from "./cards";
 import { useDroppable } from "@dnd-kit/core";
+import { AddCard } from "../../pages/board";
 
 // where I am to fetch the data from the API
 type ColumnProps = {
     title: string;
     cards: CardType[];
     column: ColumnType;
+    setCards: React.Dispatch<React.SetStateAction<CardType[]>>; 
 };
 
 export const Column = ({
     title,
     cards,
     column,
+    setCards,
 }: ColumnProps) => {
     const {setNodeRef} = useDroppable({
         id: column
@@ -48,8 +51,7 @@ export const Column = ({
                 return <Card key={card.id} {...card}/>;
             })}
         <DropIndicator beforeId={null} column={column} />
-        {/*
-        <AddCard column={column} setCards={setCards} />*/}
+        <AddCard column={column} setCards={setCards} />
         </div>
     </div>
     );
