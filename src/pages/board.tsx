@@ -1,20 +1,51 @@
-    import {
-        Dispatch,
-        SetStateAction,
-        useState,
-        DragEvent,
-        FormEvent,
-    } from "react";
-    import { FiPlus, FiTrash } from "react-icons/fi";
-    import { motion } from "framer-motion";
-    import { FaFire } from "react-icons/fa";
-    import { Header } from "../components/header/header";
-    import { BoardHeader } from "../components/header/boardHeader";
-import { CardType } from "../props/cardColumn";
+import { FormEvent, useState } from "react";
+import { Header } from "../components/header/header";
+import { BoardHeader } from "../components/header/boardHeader";
+import { CardType, column as columns} from "../props/cardColumn";
 import { Column } from "../components/board/columns";
+import { DragEndEvent } from "@dnd-kit/core";
+import { DndContext } from "@dnd-kit/core";
 import { AddCardProps } from "../props/cardProps";
-import { DEFAULT_CARDS } from "../data/cards";
-    
+import { motion } from "framer-motion";
+import { FiPlus } from "react-icons/fi";
+
+
+const COLUMNS: columns[] = [
+    { id: 'backlog', title: 'Backlog' },
+    { id: 'todo', title: 'To Do' },
+    { id: 'in progress', title: 'In Progress' },
+    { id: 'done', title: 'Done' },
+];
+
+
+export const DEFAULT_CARDS: CardType[] = [
+    // BACKLOG
+    { title: "Keep going down", id: "1", status: "backlog" },
+    { title: "Pray", id: "2", status: "in progress" },
+    { title: "Document 2 API", id: "4", status: "backlog" },
+    { title: '"Brodamid, hotspot my WiFi👼🏼"', id: "5", status: "backlog" },
+    // TODO
+    {
+    title: "Build PG's landing page",
+    id: "6",
+    status: "todo",
+    },
+
+    // DOING
+    {
+    title: "Refactor context providers to use Zustand",
+    id: "8",
+    status: "in progress",
+    },
+    { title: "50 pushups", id: "3", status: "done" },
+    // DONE
+    {
+    title: "Survive the day",
+    id: "10",
+    status: "done",
+    },
+];
+
     export const CustomKanban = () => {
         return (
             <>
@@ -29,39 +60,41 @@ import { DEFAULT_CARDS } from "../data/cards";
     };
     
     const Board = () => {
-        const [cards, setCards] = useState(DEFAULT_CARDS);
+        const [cards, setCards] = useState<CardType[]>(DEFAULT_CARDS);
+        function handleDragEnd(event: DragEndEvent) {
+            const { active, over } = event;
+        
+            if (!over) return;
+        
+            const taskId = active.id as string;
+            const newStatus = over.id as CardType['status'];
+        
+            setCards(() =>
+                cards.map((card) =>
+                    card.id === taskId
+                    ? {
+                        ...card,
+                        status: newStatus,
+                        }
+                    : card,
+                ),
+                );
+            }
     
         return (
         <div className="flex h-full w-full gap-3 overflow-x-scroll py-10 px-5">
-            <Column
-            title="Backlog"
-            column="backlog"
-            headingColor="text-neutral-500"
-            cards={cards}
-            setCards={setCards}
-            />
-            <Column
-            title="TODO"
-            column="todo"
-            headingColor="text-yellow-200"
-            cards={cards}
-            setCards={setCards}
-            />
-            <Column
-            title="WIP"
-            column="in progress"
-            headingColor="text-blue-200"
-            cards={cards}
-            setCards={setCards}
-            />
-            <Column
-            title="Complete"
-            column="done"
-            headingColor="text-emerald-200"
-            cards={cards}
-            setCards={setCards}
-            />
-            <BurnBarrel setCards={setCards} />
+            <DndContext
+                onDragEnd={handleDragEnd}>
+                {COLUMNS.map((column) => (
+                    <Column
+                    key={column.id}
+                    title={column.title}
+                    column={column.id}
+                    cards={cards.filter((card) => card.status === column.id)}
+                    setCards={setCards}
+                    />
+            ))}
+            </DndContext>
         </div>
         );
     };
@@ -70,47 +103,7 @@ import { DEFAULT_CARDS } from "../data/cards";
 
     
     
-    const BurnBarrel = ({
-        setCards,
-    }: {
-        setCards: Dispatch<SetStateAction<CardType[]>>;
-    }) => {
-        const [active, setActive] = useState(false);
-    
-        const handleDragOver = (e: DragEvent) => {
-        e.preventDefault();
-        setActive(true);
-        };
-    
-        const handleDragLeave = () => {
-        setActive(false);
-        };
-    
-        const handleDragEnd = (e: DragEvent) => {
-        const cardId = e.dataTransfer.getData("cardId");
-    
-        setCards((pv) => pv.filter((c) => c.id !== cardId));
-    
-        setActive(false);
-        };
-    
-        return (
-        <div
-            onDrop={handleDragEnd}
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            className={`mt-10 grid h-56 w-56 shrink-0 place-content-center rounded border text-3xl ${
-            active
-                ? "border-red-800 bg-red-800/20 text-red-500"
-                : "border-neutral-500 bg-neutral-500/20 text-neutral-500"
-            }`}
-        >
-            {active ? <FaFire className="animate-bounce" /> : <FiTrash />}
-        </div>
-        );
-    };
-    
-    
+
     export const AddCard = ({ column, setCards }: AddCardProps) => {
         const [text, setText] = useState("");
         const [adding, setAdding] = useState(false);
@@ -121,7 +114,7 @@ import { DEFAULT_CARDS } from "../data/cards";
         if (!text.trim().length) return;
     
         const newCard = {
-            column,
+            status: column,
             title: text.trim(),
             id: Math.random().toString(),
         };
@@ -170,5 +163,4 @@ import { DEFAULT_CARDS } from "../data/cards";
         </div>
         );
     };
-    
     
