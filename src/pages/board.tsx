@@ -10,7 +10,10 @@
     import { FaFire } from "react-icons/fa";
     import { Header } from "../components/header/header";
     import { BoardHeader } from "../components/header/boardHeader";
-import { BoardInput } from "../components/board/boardInput";
+import { CardType } from "../props/cardColumn";
+import { Column } from "../components/board/columns";
+import { AddCardProps } from "../props/cardProps";
+import { DEFAULT_CARDS } from "../data/cards";
     
     export const CustomKanban = () => {
         return (
@@ -63,243 +66,9 @@ import { BoardInput } from "../components/board/boardInput";
         );
     };
     
-    type ColumnProps = {
-        title: string;
-        headingColor: string;
-        cards: CardType[];
-        column: ColumnType;
-        setCards: Dispatch<SetStateAction<CardType[]>>;
-    };
-    
-    const Column = ({
-        title,
-        cards,
-        column,
-        setCards,
-    }: ColumnProps) => {
-        const [active, setActive] = useState(false);
-        const [columnTitle, setColumnTitle] = useState(title)
-        const [draggedCardId, setDraggedCardId] = useState<string | null>(null);
 
-        const handleTitleSave = (newTitle: string) => {
-            setColumnTitle(newTitle)
-        }
-    
-        const handleDragStart = (e: DragEvent | TouchEvent, card: CardType) => {
-            if (isDragEvent(e)) {
-                e.dataTransfer.setData("cardId", card.id);
-            } else if (isTouchEvent(e)) {
-                setDraggedCardId(card.id);
-            }
-        };
 
-        // Type guards for DragEvent and TouchEvent
-        const isDragEvent = (e: DragEvent | TouchEvent): e is DragEvent => {
-            return 'dataTransfer' in e;
-        };
-
-        const isTouchEvent = (e: DragEvent | TouchEvent): e is TouchEvent => {
-            return 'touches' in e;
-        };
     
-        const handleDragEnd = (e: DragEvent | TouchEvent) => {
-            let cardId = "";
-        
-            if (isDragEvent(e)) {
-                cardId = e.dataTransfer.getData("cardId");
-            } else if (isTouchEvent(e)) {
-                cardId = draggedCardId || "";
-                setDraggedCardId(null);
-            }
-        
-            if (!cardId) return;
-        
-            setActive(false);
-            clearHighlights();
-        
-            const indicators = getIndicators();
-            const { element } = getNearestIndicator(e, indicators);
-        
-            const before = element.dataset.before || "-1";
-        
-            if (before !== cardId) {
-                let copy = [...cards];
-        
-                let cardToTransfer = copy.find((c) => c.id === cardId);
-                if (!cardToTransfer) return;
-                cardToTransfer = { ...cardToTransfer, column };
-        
-                copy = copy.filter((c) => c.id !== cardId);
-        
-                const moveToBack = before === "-1";
-        
-                if (moveToBack) {
-                    copy.push(cardToTransfer);
-                } else {
-                    const insertAtIndex = copy.findIndex((el) => el.id === before);
-                    if (insertAtIndex === undefined) return;
-        
-                    copy.splice(insertAtIndex, 0, cardToTransfer);
-                }
-        
-                setCards(copy);
-            }
-        };
-        
-    
-        const handleDragOver = (e: DragEvent | TouchEvent) => {
-            e.preventDefault();
-        
-            if (isDragEvent(e)) {
-                highlightIndicator(e);
-                setActive(true);
-            } else if (isTouchEvent(e)) {
-                const touch = e.touches[0];
-                highlightIndicator({
-                    clientX: touch.clientX,
-                    clientY: touch.clientY,
-                } as DragEvent);
-            }
-        };
-        
-    
-        const clearHighlights = (els?: HTMLElement[]) => {
-        const indicators = els || getIndicators();
-    
-        indicators.forEach((i) => {
-            i.style.opacity = "0";
-        });
-        };
-    
-        const highlightIndicator = (e: DragEvent | TouchEvent) => {
-        const indicators = getIndicators();
-    
-        clearHighlights(indicators);
-    
-        const el = getNearestIndicator(e, indicators);
-    
-        el.element.style.opacity = "1";
-        };
-    
-        const getNearestIndicator = (e: DragEvent | TouchEvent, indicators: HTMLElement[]) => {
-            const DISTANCE_OFFSET = 50;
-        
-            // Declare `clientY` outside the condition
-            let clientY: number;
-        
-            if (isDragEvent(e)) {
-                clientY = e.clientY; // DragEvent uses clientY directly
-            } else if (isTouchEvent(e)) {
-                const touch = e.touches[0];
-                clientY = touch.clientY; // TouchEvent uses touches[0].clientY
-            } else {
-                // Fallback for unexpected event types
-                return {
-                    offset: Number.NEGATIVE_INFINITY,
-                    element: indicators[indicators.length - 1],
-                };
-            }
-        
-            const el = indicators.reduce(
-                (closest, child) => {
-                    const box = child.getBoundingClientRect();
-                    const offset = clientY - (box.top + DISTANCE_OFFSET);
-        
-                    if (offset < 0 && offset > closest.offset) {
-                        return { offset, element: child };
-                    } else {
-                        return closest;
-                    }
-                },
-                {
-                    offset: Number.NEGATIVE_INFINITY,
-                    element: indicators[indicators.length - 1],
-                }
-            );
-        
-            return el;
-        };
-        
-        
-    
-        const getIndicators = () => {
-        return Array.from(
-            document.querySelectorAll(
-            `[data-column="${column}"]`
-            ) as unknown as HTMLElement[]
-        );
-        };
-    
-        const handleDragLeave = () => {
-        clearHighlights();
-        setActive(false);
-        };
-    
-        const filteredCards = cards.filter((c) => c.column === column);
-    
-        return (
-        <div className=" shrink-0">
-            <div className="mb-3 flex items-center justify-between">
-            <BoardInput initialTitle={columnTitle} onSave={(handleTitleSave)}/>
-            {/* 
-            <span className="rounded text-sm text-neutral-400">
-                {filteredCards.length}
-            </span>*/}
-            </div>
-            <div
-            onDrop={handleDragEnd}
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            className={`min-h-fit bg-[#010B13] p-3 rounded-md w-[240px] transition-colors ${
-                active ? "bg-neutral-800/50" : "bg-neutral-800/0"
-            }`}
-            >
-            {filteredCards.map((c) => {
-                return <Card key={c.id} {...c} handleDragStart={handleDragStart} />;
-            })}
-            <DropIndicator beforeId={null} column={column} />
-            <AddCard column={column} setCards={setCards} />
-            </div>
-        </div>
-        );
-    };
-    
-    type CardProps = CardType & {
-        handleDragStart: Function;
-    };
-    
-    const Card = ({ title, id, column, handleDragStart }: CardProps) => {
-        return (
-        <>
-            <DropIndicator beforeId={id} column={column} />
-            <motion.div
-            layout
-            layoutId={id}
-            draggable="true"
-            onDragStart={(e) => handleDragStart(e, { title, id, column })}
-            whileDrag={{ backgroundColor: 'var(--bg-accent-low)' }}
-            className="cursor-grab rounded border border-neutral-70 p-3 active:cursor-grabbing"
-            >
-            <p className="text-sm text-neutral-100">{title}</p>
-            </motion.div>
-        </>
-        );
-    };
-    
-    type DropIndicatorProps = {
-        beforeId: string | null;
-        column: string;
-    };
-    
-    const DropIndicator = ({ beforeId, column }: DropIndicatorProps) => {
-        return (
-        <div
-            data-before={beforeId || "-1"}
-            data-column={column}
-            className="my-0.5 h-0.5 w-full bg-violet-400 opacity-0"
-        />
-        );
-    };
     
     const BurnBarrel = ({
         setCards,
@@ -341,12 +110,8 @@ import { BoardInput } from "../components/board/boardInput";
         );
     };
     
-    type AddCardProps = {
-        column: ColumnType;
-        setCards: Dispatch<SetStateAction<CardType[]>>;
-    };
     
-    const AddCard = ({ column, setCards }: AddCardProps) => {
+    export const AddCard = ({ column, setCards }: AddCardProps) => {
         const [text, setText] = useState("");
         const [adding, setAdding] = useState(false);
     
@@ -406,38 +171,4 @@ import { BoardInput } from "../components/board/boardInput";
         );
     };
     
-    type ColumnType = "backlog" | "todo" | "in progress" | "done";
     
-    type CardType = {
-        title: string;
-        id: string;
-        column: ColumnType;
-    };
-    
-    const DEFAULT_CARDS: CardType[] = [
-        // BACKLOG
-        { title: "Keep going down", id: "1", column: "backlog" },
-        { title: "Pray", id: "2", column: "in progress" },
-        { title: "Document 2 API", id: "4", column: "backlog" },
-        { title: '"Brodamid, hotspot my WiFi👼🏼"', id: "5", column: "backlog" },
-        // TODO
-        {
-        title: "Build PG's landing page",
-        id: "6",
-        column: "todo",
-        },
-    
-        // DOING
-        {
-        title: "Refactor context providers to use Zustand",
-        id: "8",
-        column: "in progress",
-        },
-        { title: "50 pushups", id: "3", column: "done" },
-        // DONE
-        {
-        title: "Survive the day",
-        id: "10",
-        column: "done",
-        },
-    ];
