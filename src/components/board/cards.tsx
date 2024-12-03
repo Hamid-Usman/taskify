@@ -1,17 +1,35 @@
 import { motion } from "framer-motion";
 import { DropIndicator } from "./utils/dropIndicator";
-import { CardProps } from "./columns";
-export const Card = ({ title, id, column, handleDragStart }: CardProps) => {
+import { CardType } from "../../props/cardColumn";
+import { useDraggable } from "@dnd-kit/core";
+import clsx from "clsx";
+
+
+export const Card = ({ title, id, status }: CardType) => {
+    const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
+      id: id,
+    });
+    
+    const style = transform
+    ? {
+        transform: `translate(${transform.x}px, ${transform.y}px)`,
+        backgroundColor:  isDragging ? "primary" : "accent"
+        
+        }
+    : undefined;
     return (
     <>
-        <DropIndicator beforeId={id} column={column} />
+        <DropIndicator beforeId={id} column={status} />
         <motion.div
-        layout
-        layoutId={id}
+        ref={setNodeRef}
+        {...listeners}
+        {...attributes}
         draggable="true"
-        onDragStart={(e) => handleDragStart(e, { title, id, column })}
-        whileDrag={{ backgroundColor: 'var(--bg-accent-low)' }}
-        className="cursor-grab rounded border border-neutral-70 p-3 active:cursor-grabbing"
+        className={clsx(
+            "cursor-grab rounded border border-neutral-70 p-3 active:cursor-grabbing transition-colors duration-200",
+            isDragging ? "opacity-50, bg-secondary": "placeholder-opacity-100" // Replace colors with Tailwind classes
+          )}
+          style={style}
         >
         <p className="text-sm text-neutral-100">{title}</p>
         </motion.div>
