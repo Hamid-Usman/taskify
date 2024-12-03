@@ -11,7 +11,7 @@ type ColumnProps = {
     title: string;
     cards: CardType[];
     column: ColumnType;
-    setCards: React.Dispatch<React.SetStateAction<CardType[]>>; 
+    setCards: React.Dispatch<React.SetStateAction<CardType[]>>;
 };
 
 export const Column = ({

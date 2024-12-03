@@ -67,17 +67,12 @@ export const DEFAULT_CARDS: CardType[] = [
             if (!over) return;
         
             const taskId = active.id as string;
-            const newStatus = over.id as CardType['status'];
+            const newStatus = over.id as CardType["status"];
         
-            setCards(() =>
-                cards.map((card) =>
-                    card.id === taskId
-                    ? {
-                        ...card,
-                        status: newStatus,
-                        }
-                    : card,
-                ),
+            setCards((prevCards) =>
+                prevCards.map((card) =>
+                    card.id === taskId ? { ...card, status: newStatus } : card
+                )
                 );
             }
     
