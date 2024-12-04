@@ -3,11 +3,23 @@ import { DropIndicator } from "./utils/dropIndicator";
 import { CardType } from "../../props/cardColumn";
 import { useDraggable } from "@dnd-kit/core";
 import clsx from "clsx";
+import { useState } from "react";
+import { CardModal } from "../../modals/cardModal";
 
+interface CardProp {
+    card: CardType
+}
 
-export const Card = ({ title, id, status }: CardType) => {
+export const Card = ({ card }: CardProp) => {
+    const [modalOpen, setModalOpen] = useState(false)
+    
+    const openModal = ()=> {
+        setModalOpen(true)
+    }
+    const closeModal = () => setModalOpen(false)
+
     const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
-      id: id,
+      id: card.id,
     });
     
     const style = transform
@@ -19,8 +31,10 @@ export const Card = ({ title, id, status }: CardType) => {
     : undefined;
     return (
     <>
-        <DropIndicator beforeId={id} column={status} />
+        <DropIndicator beforeId={card.id} column={card.status} />
         <motion.div
+        onClick={(e)=> e.stopPropagation}
+        key={card.id}
         ref={setNodeRef}
         {...listeners}
         {...attributes}
@@ -31,8 +45,16 @@ export const Card = ({ title, id, status }: CardType) => {
         )}
         style={{touchAction: "none", ...style}}
         >
-        <p className="text-sm text-neutral-100">{title}</p>
+        <p className="text-sm text-neutral-100"
+        onClick={openModal}>{card.title}</p>
         </motion.div>
+
+        {modalOpen && (
+            
+        <CardModal 
+        closeModal={closeModal}
+        card={card}/>
+        )}
     </>
     );
 };

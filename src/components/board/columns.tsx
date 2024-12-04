@@ -49,7 +49,7 @@ export const Column = ({
         className={`min-h-fit bg-[#010B13] p-3 rounded-md w-[240px] transition-colors`}
         >
             {filteredCards.map((card) =>{
-                return <Card key={card.title} {...card}/>;
+                return <Card key={card.id} card={card}/>;
             })}
         <DropIndicator beforeId={null} column={column} />
         <AddCard column={column} setCards={setCards} />
