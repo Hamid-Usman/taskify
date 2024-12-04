@@ -22,8 +22,8 @@ export const DEFAULT_CARDS: CardType[] = [
     // BACKLOG
     { title: "Keep going down", id: "1", status: "backlog" },
     { title: "Pray", id: "2", status: "in progress" },
-    { title: "Document 2 API", id: "4", status: "backlog" },
-    { title: '"Brodamid, hotspot my WiFi👼🏼"', id: "5", status: "backlog" },
+    { title: "Skywalking", id: "4", status: "backlog" },
+    { title: 'Make the cards draggable for Halimah🌚', id: "5", status: "done" },
     // TODO
     {
     title: "Build PG's landing page",
@@ -61,6 +61,7 @@ export const DEFAULT_CARDS: CardType[] = [
     
     const Board = () => {
         const [cards, setCards] = useState<CardType[]>(DEFAULT_CARDS);
+        const [columns, setColumns] = useState(COLUMNS); // Track column order
         function handleDragEnd(event: DragEndEvent) {
             const { active, over } = event;
         
@@ -74,7 +75,21 @@ export const DEFAULT_CARDS: CardType[] = [
                     card.id === taskId ? { ...card, status: newStatus } : card
                 )
                 );
+                
+            if (active.data.current?.type === 'column' && over.data.current?.type === 'column') {
+                const activeIndex = columns.findIndex((col) => col.id === active.id);
+                const overIndex = columns.findIndex((col) => col.id === over.id);
+    
+                // Swap columns if the index is different
+                if (activeIndex !== overIndex) {
+                    const updatedColumns = [...columns];
+                    const [movedColumn] = updatedColumns.splice(activeIndex, 1);
+                    updatedColumns.splice(overIndex, 0, movedColumn);
+                    setColumns(updatedColumns); // Update column order
+                }
             }
+            }
+        
     
         return (
         <div className="flex h-full w-full gap-3 overflow-x-scroll py-10 px-5">

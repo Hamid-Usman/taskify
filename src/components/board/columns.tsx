@@ -3,7 +3,7 @@ import { CardType, ColumnType } from "../../props/cardColumn";
 import { BoardInput } from "./boardInput";
 import { DropIndicator } from "./utils/dropIndicator";
 import { Card } from "./cards";
-import { useDroppable } from "@dnd-kit/core";
+import { useDroppable, useDraggable } from "@dnd-kit/core";
 import { AddCard } from "../../pages/board";
 
 // where I am to fetch the data from the API
@@ -21,7 +21,12 @@ export const Column = ({
     setCards,
 }: ColumnProps) => {
     const {setNodeRef} = useDroppable({
-        id: column
+        id: column,
+        data: {type: 'column'}
+    })
+    const {attributes, listeners} = useDraggable ({
+        id: column,
+        data: {type: 'column'}
     })
     const [columnTitle, setColumnTitle] = useState(title)
 
@@ -45,10 +50,12 @@ export const Column = ({
         </div>
         <div
         ref={setNodeRef}
+        {...attributes}
+        {...listeners}
         className={`min-h-fit bg-[#010B13] p-3 rounded-md w-[240px] transition-colors`}
         >
             {filteredCards.map((card) =>{
-                return <Card key={card.title} {...card}/>;
+                return <Card {...card}/>;
             })}
         <DropIndicator beforeId={null} column={column} />
         <AddCard column={column} setCards={setCards} />
