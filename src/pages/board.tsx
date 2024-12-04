@@ -119,58 +119,57 @@ export const DEFAULT_CARDS: CardType[] = [
         const [adding, setAdding] = useState(false);
     
         const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
+            e.preventDefault();
     
-        if (!text.trim().length) return;
+            if (!text.trim().length) return;
     
-        const newCard = {
-            status: column,
-            title: text.trim(),
-            id: Math.random().toString(),
-        };
+            const newCard = {
+                status: column,
+                title: text.trim(),
+                id: Math.random().toString(),
+            };
     
-        setCards((pv) => [...pv, newCard]);
+            setCards((pv) => [...pv, newCard]);
     
-        setAdding(false);
+            setAdding(false);
         };
     
         return (
-        <div className="mt-2">
-            {adding ? (
-            <motion.form className="" layout onSubmit={handleSubmit}>
-                <textarea
-                onChange={(e) => setText(e.target.value)}
-                autoFocus
-                placeholder="Add new task..."
-                className="w-full h-14 rounded text-primary border-primary_low border px-2 focus:outline-primary focus:outline-none bg-primary_low text-sm"
-                />
-                <div className="mt-1.5 flex items-center justify-end gap-1.5">
-                <button
-                    onClick={() => setAdding(false)}
-                    className="px-3 py-1.5 text-xs text-neutral-400 transition-colors hover:text-neutral-50"
-                >
-                    Close
-                </button>
-                <button
-                    type="submit"
-                    className="flex items-center gap-1.5 rounded bg-neutral-50 px-3 py-1.5 text-xs text-neutral-950 transition-colors hover:bg-neutral-300"
-                >
-                    <span>Add</span>
-                    <FiPlus />
-                </button>
-                </div>
-            </motion.form>
-            ) : (
-            <motion.button
-                layout
-                onClick={() => setAdding(true)}
-                className="flex w-full items-center gap-1.5 px-3 py-1.5 text-xs text-neutral-400 transition-colors rounded-md hover:bg-secondary hover:text-neutral-50"
-            >
-                <span>Add card</span>
-                <FiPlus />
-            </motion.button>
-            )}
-        </div>
+            <div className="mt-2">
+                {adding ? (
+                    <motion.form layout onSubmit={handleSubmit}>
+                        <textarea
+                            onChange={(e) => setText(e.target.value)}
+                            placeholder="Add new task..."
+                            className="w-full h-14 rounded text-primary border-primary_low border px-2 focus:outline-primary focus:outline-none bg-primary_low text-sm"
+                        />
+                        <div className="mt-1.5 flex items-center justify-end gap-1.5">
+                            <button
+                                onClick={() => setAdding(false)}
+                                className="px-3 py-1.5 text-xs text-neutral-400 transition-colors hover:text-neutral-50"
+                            >
+                                Close
+                            </button>
+                            <button
+                                type="submit"
+                                className="flex items-center gap-1.5 rounded bg-neutral-50 px-3 py-1.5 text-xs text-neutral-950 transition-colors hover:bg-neutral-300"
+                            >
+                                <span>Add</span>
+                                <FiPlus />
+                            </button>
+                        </div>
+                    </motion.form>
+                ) : (
+                    <motion.button
+                        onClick={() => setAdding(true)}
+                        className="flex w-full items-center gap-1.5 px-3 py-1.5 text-xs text-neutral-400 transition-colors rounded-md hover:bg-secondary hover:text-neutral-50"
+                    >
+                        <span>Add card</span>
+                        <FiPlus />
+                    </motion.button>
+                )}
+            </div>
         );
     };
+    
     
