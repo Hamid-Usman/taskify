@@ -28,8 +28,8 @@ export const Card = ({ title, id, status }: CardType) => {
         className={clsx(
             "cursor-grab rounded border border-neutral-70 p-3 active:cursor-grabbing transition-colors duration-200",
             isDragging ? "opacity-50, bg-secondary": "placeholder-opacity-100" // Replace colors with Tailwind classes
-          )}
-          style={style}
+        )}
+        style={{touchAction: "none", ...style}}
         >
         <p className="text-sm text-neutral-100">{title}</p>
         </motion.div>
