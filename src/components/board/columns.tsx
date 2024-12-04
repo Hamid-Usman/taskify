@@ -46,7 +46,8 @@ export const Column = ({
         </div>
         <div
         ref={setNodeRef}
-        className={`min-h-fit bg-[#010B13] p-3 rounded-md w-[240px] transition-colors`}
+        className={`min-h-fit bg-[#010B13]  p-3 rounded-md w-[240px] transition-colors
+            flex flex-col gap-2`}
         >
             {filteredCards.map((card) =>{
                 return <Card key={card.id} card={card}/>;

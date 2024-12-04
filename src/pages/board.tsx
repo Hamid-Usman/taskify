@@ -171,5 +171,3 @@ export const DEFAULT_CARDS: CardType[] = [
             </div>
         );
     };
-    
-    
