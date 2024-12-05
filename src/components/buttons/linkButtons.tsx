@@ -10,7 +10,7 @@ export const LinkButton: React.FC<LinkButtonProp> = ({link, children}) => {
     return (
         <>
             <Link to={link}
-                className="z-20 p-3 px-5 bg-primary
+                className="z-20 p-3 px-5 bg-primary text-secondary
                     rounded-xl font-bold"
                 >
                     {children}
