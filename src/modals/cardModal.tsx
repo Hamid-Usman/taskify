@@ -5,6 +5,7 @@ import { MdOutlineSubtitles } from "react-icons/md";
 import { Textarea } from "../components/ui/textarea"
 import { MdDeleteForever } from "react-icons/md";
 import { GiNotebook } from "react-icons/gi";
+import { SlCalender } from "react-icons/sl";
 
 export interface CardTypeProp {
     closeModal: ()=> void;
@@ -40,7 +41,12 @@ export const CardModal: React.FC<CardTypeProp> = ({closeModal, card}) => {
                             </div>
                         </div>
                         <section className="flex flex-col gap-5 mt-5">
-                        <p className="px-10">(Input fields not functional yet)</p>
+                            <div className="flex gap-4">
+                                <SlCalender 
+                                    size={25}/>
+                                <input type="date" name="" className="w-fit bg-accent_low text-accent px-2 rounded" id="" />
+                            </div>
+                        <p className="px-10">Due 25/12/2024</p>
                             <Textarea 
                                 heading="Description"
                                 icon={<GiNotebook
