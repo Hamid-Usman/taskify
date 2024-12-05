@@ -5,6 +5,7 @@ import { Register } from './pages/register'
 import { Index } from './pages/index';
 import React from 'react';
 import { CustomKanban } from './pages/board';
+import { Profile } from './pages/profile';
 const App: React.FC = () => {
 
 return (
@@ -14,6 +15,7 @@ return (
             <Route path='/home' element={<Home />} />
             <Route path='/register' element={<Register />} />
             <Route path='/board' element={<CustomKanban />} />
+            <Route path='/profile' element={<Profile />} />
         </Routes>
     </Router>
 )

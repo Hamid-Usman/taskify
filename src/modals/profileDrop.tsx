@@ -25,6 +25,7 @@ import {
         DropdownMenuSubContent,
         DropdownMenuTrigger,
     } from "../components/ui/dropdown-menu"
+import { Link } from "react-router-dom"
     
     export function ProfileDropdown() {
         return (
@@ -43,11 +44,13 @@ import {
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-                <DropdownMenuItem>
-                <User />
-                <span>Profile</span>
-                <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-                </DropdownMenuItem>
+                <Link to={'/profile'}>
+                    <DropdownMenuItem>
+                    <User />
+                    <span>Profile</span>
+                    <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+                    </DropdownMenuItem>
+                </Link>
                 <DropdownMenuItem>
                 <CreditCard />
                 <span>Billing</span>
