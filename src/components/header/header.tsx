@@ -1,15 +1,15 @@
 
 import { FaBell, FaMagnifyingGlass } from "react-icons/fa6";
 import { ButtonsSmall } from "./headerSmall";
-import { UserImage } from "../user/image";
 import { Link } from "react-router-dom";
+import { ProfileDropdown } from "../../modals/profileDrop";
 
 export const Header = () => {
 
     return (
         <nav
         className="px-3 py-2 md:py-1 top-0 fixed w-full border-b border-accent_low
-            flex justify-between items-center z-50"
+            flex justify-between items-center z-[2]"
         >
         <div className="flex items-center gap-2">
             <div className="p-2 bg-primary_low transition duration-300
@@ -54,7 +54,7 @@ export const Header = () => {
             <FaMagnifyingGlass size="20" className="cursor-pointer text-gray font-bold" />
 
             <FaBell size="20" className="cursor-pointer text-accent rotate-45" />
-            <UserImage />
+            <ProfileDropdown />
         </div>
         </nav>
     );

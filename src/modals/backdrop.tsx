@@ -13,7 +13,7 @@ const Backdrop: React.FC<BackdropProp> = ({children, onClick}) => {
         exit= {{opacity: 0}}
         onClick={onClick}
         className="fixed top-0 left-0 w-full h-full bg-[#000000e1]
-                flex justify-center items-center z-10"
+                flex justify-center items-center z-100"
         >
             {children}
 
