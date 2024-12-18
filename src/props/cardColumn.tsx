@@ -1,11 +1,15 @@
-export type ColumnType = "backlog" | "todo" | "in progress" | "done";
 
-export type column = {
-    id: ColumnType;
+export type ColumnType = {
+    id: number;
     title: string;
+    order: number;
 };
+
 export type CardType = {
-    title: string;
-    id: string;
-    status: ColumnType;
+    id: number;
+    task: string;
+    position: number;
+    description: string;
+    due_date: string;
+    column: number;
 };

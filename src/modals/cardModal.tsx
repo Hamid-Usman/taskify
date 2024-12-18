@@ -6,6 +6,7 @@ import { Textarea } from "../components/ui/textarea"
 import { MdDeleteForever } from "react-icons/md";
 import { GiNotebook } from "react-icons/gi";
 import { SlCalender } from "react-icons/sl";
+import { motion } from "framer-motion";
 
 export interface CardTypeProp {
     closeModal: ()=> void;
@@ -17,7 +18,8 @@ export const CardModal: React.FC<CardTypeProp> = ({closeModal, card}) => {
     return(
         <Backdrop
             onClick={closeModal}>
-                <div
+                <motion.div
+                    drag={true}
                     onClick={(e)=>e.stopPropagation()}
                     className="w-[95%] md:w-[80%] lg:w-[50%] h-fit rounded-xl p-3 px-5 mx:px-7 bg-secondary
                         flex gap-4 flex-col z-[3]">
@@ -27,16 +29,12 @@ export const CardModal: React.FC<CardTypeProp> = ({closeModal, card}) => {
                             <div className="text-lg md:text-xl font-bold flex ">
                                 <label htmlFor="" className="flex flex-col md:flex-row  md:items-center gap-2 ">
                                     <h1 className="flex gap-2">
-                                        {card.title}
+                                        {card.task}
                                     </h1>
                                     
-                                    <span
-                                            className="px-1 text-[14px] w-max h-max bg-accent_low rounded">{card.status}
-                                        </span>
-                                    
-                                        <span>
-                                            <MdDeleteForever />
-                                        </span>
+                                    <span>
+                                        <MdDeleteForever />
+                                    </span>
                                 </label>
                             </div>
                         </div>
@@ -53,10 +51,7 @@ export const CardModal: React.FC<CardTypeProp> = ({closeModal, card}) => {
                                     size={25}/>}
                                 />
                         </section>
-                            
-                        
-
-                </div>
+                </motion.div>
 
         </Backdrop>
     )

@@ -1,50 +1,16 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { Header } from "../components/header/header";
 import { BoardHeader } from "../components/header/boardHeader";
-import { CardType, column as columns} from "../props/cardColumn";
-import { Column } from "../components/board/columns";
+import { ColumnType} from "../props/cardColumn";
 import { DragEndEvent } from "@dnd-kit/core";
 import { DndContext } from "@dnd-kit/core";
 import { AddCardProps } from "../props/cardProps";
 import { motion } from "framer-motion";
 import { FiPlus } from "react-icons/fi";
+import { Column } from "../components/board/columns";
 
 
-const COLUMNS: columns[] = [
-    { id: 'backlog', title: 'Backlog' },
-    { id: 'todo', title: 'To Do' },
-    { id: 'in progress', title: 'In Progress' },
-    { id: 'done', title: 'Done' },
-];
 
-
-export const DEFAULT_CARDS: CardType[] = [
-    // BACKLOG
-    { title: "Keep going down", id: "1", status: "backlog" },
-    { title: "Pray", id: "2", status: "in progress" },
-    { title: "Skywalking", id: "4", status: "backlog" },
-    { title: 'Make the cards draggable for Halimah🌚', id: "5", status: "done" },
-    // TODO
-    {
-    title: "Build PG's landing page",
-    id: "6",
-    status: "todo",
-    },
-
-    // DOING
-    {
-    title: "Refactor context providers to use Zustand",
-    id: "8",
-    status: "in progress",
-    },
-    { title: "50 pushups", id: "3", status: "done" },
-    // DONE
-    {
-    title: "Survive the day",
-    id: "10",
-    status: "done",
-    },
-];
 
     export const CustomKanban = () => {
         return (
@@ -60,34 +26,40 @@ export const DEFAULT_CARDS: CardType[] = [
     };
     
     const Board = () => {
-        const [cards, setCards] = useState<CardType[]>(DEFAULT_CARDS);
-        const [columns, setColumns] = useState(COLUMNS); // Track column order
+        //const [cards, setCards] = useState<CardType[]>();
+        const [columns, setColumns] = useState<ColumnType[]>([]);
+        const [error, setError] = useState<string | null>(null);
+
+        useEffect(() => {
+            const fetchColumns = async () => {
+                try {
+                    const response = await fetch('http://127.0.0.1:8000/columns/');
+                    if (!response.ok) {
+                        throw new Error("Couldn't fetch columns")
+                    };
+                    const data = await response.json();
+                    setColumns(data)
+                }
+
+                catch(err: unknown) {
+                    setError((err as Error).message);
+                }
+            };
+            fetchColumns()
+        }, []);
+
         function handleDragEnd(event: DragEndEvent) {
             const { active, over } = event;
         
             if (!over) return;
         
             const taskId = active.id as string;
-            const newStatus = over.id as CardType["status"];
         
             setCards((prevCards) =>
                 prevCards.map((card) =>
-                    card.id === taskId ? { ...card, status: newStatus } : card
+                    card.id === taskId ? { ...card } : card
                 )
                 );
-                
-            if (active.data.current?.type === 'column' && over.data.current?.type === 'column') {
-                const activeIndex = columns.findIndex((col) => col.id === active.id);
-                const overIndex = columns.findIndex((col) => col.id === over.id);
-    
-                // Swap columns if the index is different
-                if (activeIndex !== overIndex) {
-                    const updatedColumns = [...columns];
-                    const [movedColumn] = updatedColumns.splice(activeIndex, 1);
-                    updatedColumns.splice(overIndex, 0, movedColumn);
-                    setColumns(updatedColumns); // Update column order
-                }
-            }
             }
         
     
@@ -95,13 +67,11 @@ export const DEFAULT_CARDS: CardType[] = [
         <div className="flex h-full w-full gap-3 overflow-x-scroll py-10 px-5">
             <DndContext
                 onDragEnd={handleDragEnd}>
-                {COLUMNS.map((column) => (
+                {columns.map((column) => (
                     <Column
                     key={column.id}
                     title={column.title}
-                    column={column.id}
-                    cards={cards.filter((card) => card.status === column.id)}
-                    setCards={setCards}
+                    columnID={column.id}
                     />
             ))}
             </DndContext>
