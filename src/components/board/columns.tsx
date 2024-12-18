@@ -32,7 +32,6 @@ export const Column = ({ title, columnID }: ColumnProps) => {
   };
 
   useEffect(() => {
-
     if (!columnID || columnID <= 0) {
       setError("Invalid column ID");
       setLoading(false);
@@ -43,15 +42,40 @@ export const Column = ({ title, columnID }: ColumnProps) => {
     fetchCards(columnID);
   }, [columnID]);
 
-  const handleTitleSave = (newTitle: string) => {
-    setColumnTitle(newTitle);
+  const handleTitleSave = async (newTitle: string) => {
+    try {
+      const response = await fetch(`http://127.0.0.1:8000/columns/${columnID}/`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title: newTitle, // Use the newTitle parameter here
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Couldn't change title");
+      }
+
+      // Update the local state with the new title after a successful response
+      setColumnTitle(newTitle);
+    } catch (err) {
+      setError((err as Error).message || "An unexpected error occurred");
+    }
   };
 
   return (
     <div className="shrink-0">
       {/* Column Title Input */}
       <div className="mb-3 flex items-center justify-between">
-        <BoardInput initialTitle={columnTitle} onSave={handleTitleSave} />
+        <BoardInput
+          initialTitle={columnTitle}
+          onSave={(newTitle) => {
+            handleTitleSave(newTitle); // Update on the server
+            setColumnTitle(newTitle); // Update locally
+          }}
+        />
       </div>
 
       {/* Cards Container */}
@@ -69,9 +93,7 @@ export const Column = ({ title, columnID }: ColumnProps) => {
             </button>
           </div>
         ) : cards.length > 0 ? (
-          cards.map((card) => (
-            <Card key={card.id} card={card} />
-          ))
+          cards.map((card) => <Card key={card.id} card={card} />)
         ) : (
           <div>No cards available</div>
         )}

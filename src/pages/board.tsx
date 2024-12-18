@@ -99,7 +99,6 @@ import { Column } from "../components/board/columns";
                 id: Math.random().toString(),
             };
     
-            setCards((pv) => [...pv, newCard]);
     
             setAdding(false);
         };

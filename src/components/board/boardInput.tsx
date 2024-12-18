@@ -11,8 +11,10 @@ export const BoardInput = ({ initialTitle, onSave }: { initialTitle: string, onS
     }
 
     const handleHide = () => {
-        setEditing(false)
-        onSave(content)
+        setEditing(false);
+        if (content.trim() !== "") {
+          onSave(content); // Call onSave when the user finishes editing
+        }
     }
 
     const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
@@ -20,14 +22,18 @@ export const BoardInput = ({ initialTitle, onSave }: { initialTitle: string, onS
 
     }
     const handleKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
-        if (event.key === 'Enter') {
+        if (event.key === "Enter") {
             event.preventDefault();
-            setEditing(false);
+            handleHide(); // Save and exit edit mode on Enter key
         }
     };
     const handleOutsideClick = (event: MouseEvent) => {
-        if (textRef.current && !textRef.current.contains(event.target as Node) && !hRef.current?.contains(event.target as Node)) {
-            setEditing(false);
+        if (
+          textRef.current &&
+          !textRef.current.contains(event.target as Node) &&
+          !hRef.current?.contains(event.target as Node)
+        ) {
+          handleHide(); // Save and exit edit mode when clicked outside
         }
     };
 

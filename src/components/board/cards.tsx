@@ -40,14 +40,6 @@ export const Card = ({ card }: CardProp) => {
         <p className="text-sm text-gray-500">Due: {new Date(card.due_date).toLocaleDateString()}</p>
       </motion.div>
 
-      {!isDragging && (
-        <button
-          className="bg-blue-500 text-white py-1 w-full rounded-sm mt-2 hover:bg-blue-600"
-          onClick={openModal}
-        >
-          Expand
-        </button>
-      )}
 
       {modalOpen && <CardModal closeModal={closeModal} card={card} />}
     </div>

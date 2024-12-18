@@ -7,6 +7,8 @@ import { MdDeleteForever } from "react-icons/md";
 import { GiNotebook } from "react-icons/gi";
 import { SlCalender } from "react-icons/sl";
 import { motion } from "framer-motion";
+import { useState } from "react";
+import { Button } from "../components/buttons/button";
 
 export interface CardTypeProp {
     closeModal: ()=> void;
@@ -14,6 +16,52 @@ export interface CardTypeProp {
 }
 
 export const CardModal: React.FC<CardTypeProp> = ({closeModal, card}) => {
+    const [dueDate, setDueDate] = useState<string>(card.due_date)
+    const [description, setDescription] = useState<string>(card.description)
+    const [task, setTask] = useState<string>(card.task)
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState<string | null>(null)
+
+    const handleTaskChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setLoading(false)
+        setTask(e.target.value)
+    }
+
+    const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setLoading(false);
+        setDueDate(e.target.value);
+    }
+
+    const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setLoading(false);
+        setDescription(e.target.value);
+    }
+
+    const handleSave = async () => {
+        setLoading(true)
+
+        try {
+            const response = await fetch(`http://127.0.0.1:8000/cards/${card.id}/`, {
+                method: 'PATCH',
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    due_date: dueDate,
+                    description
+                })
+            })
+            if (!response.ok) {
+                throw new Error('Failed to update card')
+            }
+            const update = response.json()
+            console.log(update)
+
+        }
+        catch(err) {
+            setError((err as Error).message || "An unexpected error occurred");
+        }
+    }
     
     return(
         <Backdrop
@@ -41,16 +89,37 @@ export const CardModal: React.FC<CardTypeProp> = ({closeModal, card}) => {
                         <section className="flex flex-col gap-5 mt-5">
                             <div className="flex gap-4">
                                 <SlCalender 
-                                    size={25}/>
-                                <input type="date" name="" className="w-fit bg-accent_low text-accent px-2 rounded" id="" />
+                                    size={25}
+                                />
+                                <input
+                                    type="date"
+                                    value={dueDate}
+                                    onChange={handleDateChange}
+                                    className={`w-fit px-2 rounded ${
+                                        new Date(dueDate).toDateString() <= new Date().toDateString()
+                                            ? 'bg-[#DC143C] text-white'
+                                            : 'bg-accent_low text-accent'
+                                    }`}
+                                />
                             </div>
-                        <p className="px-10">Due 25/12/2024</p>
                             <Textarea 
+                                value={description}
+                                onChange={handleDescriptionChange}
                                 heading="Description"
                                 icon={<GiNotebook
                                     size={25}/>}
                                 />
                         </section>
+                        <div className="ml-10">
+                            
+                        <Button
+                            onClick={handleSave}
+                            classname={loading ? "bg-accent_low text-gray" : ""}
+                        >
+                        {loading ? "Saved..." : "Save"}
+
+                        </Button>
+                        </div>
                 </motion.div>
 
         </Backdrop>

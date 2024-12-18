@@ -12,7 +12,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps
     return (
         <div className="flex gap-3 w-[100%] items-start">
             {icon}
-            <form action="">
+            <div >
                 <h1 className="text-md font-bold mb-2">{heading}</h1>
                 <textarea
                     className={cn(
@@ -22,10 +22,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps
                     ref={ref}
                     {...props}
                 />
-                <Button>
-                    Save
-                </Button>
-            </form>
+            </div>
         </div>
     )
 })
