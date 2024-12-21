@@ -8,10 +8,9 @@ type TextareaProps = React.ComponentProps<"textarea"> & {
 };
 
 const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps
-    >(({heading, icon, className, ...props }, ref) => {
+    >(({heading, className, ...props }, ref) => {
     return (
         <div className="flex gap-3 w-[100%] items-start">
-            {icon}
             <div >
                 <h1 className="text-md font-bold mb-2">{heading}</h1>
                 <textarea

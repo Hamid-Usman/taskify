@@ -15,15 +15,17 @@ export const Card = ({ card }: CardProp) => {
   const closeModal = () => setModalOpen(false);
 
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
-    id: card.id.toString(), // Convert id to string for compatibility
+    id: card.id.toString(),
   });
 
   const style = transform
     ? {
         transform: `translate(${transform.x}px, ${transform.y}px)`,
-        backgroundColor: isDragging ? "var(--primary)" : "var(--accent)", // Ensure CSS vars are defined
+        backgroundColor: isDragging ? "var(--primary)" : "var(--accent)",
       }
     : undefined;
+
+    
 
   return (
     <div className="rounded">

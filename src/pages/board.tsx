@@ -1,13 +1,10 @@
-import { FormEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Header } from "../components/header/header";
 import { BoardHeader } from "../components/header/boardHeader";
 import { ColumnType} from "../props/cardColumn";
-import { DragEndEvent } from "@dnd-kit/core";
 import { DndContext } from "@dnd-kit/core";
-import { AddCardProps } from "../props/cardProps";
-import { motion } from "framer-motion";
-import { FiPlus } from "react-icons/fi";
 import { Column } from "../components/board/columns";
+import { AddColumnButton } from "../components/board/addColumn";
 
 
 
@@ -26,9 +23,30 @@ import { Column } from "../components/board/columns";
     };
     
     const Board = () => {
-        //const [cards, setCards] = useState<CardType[]>();
-        const [columns, setColumns] = useState<ColumnType[]>([]);
-        const [error, setError] = useState<string | null>(null);
+    const [columns, setColumns] = useState<ColumnType[]>([]);
+    const [error, setError] = useState<string | null>(null);
+
+    const addColumn = async (title: string) => {
+        try {
+            const response = await fetch("http://127.0.0.1:8000/columns/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ title, order: columns.length }),
+            });
+    
+            if (!response.ok) {
+            throw new Error("Failed to add column");
+            }
+    
+            const newColumn = await response.json();
+            setColumns((prevColumns) => [...prevColumns, newColumn]);
+        } catch (err) {
+            console.error("Error adding column:", err);
+            setError((err as Error).message || "An unexpected error occurred");
+        }
+        };
 
         useEffect(() => {
             const fetchColumns = async () => {
@@ -48,25 +66,10 @@ import { Column } from "../components/board/columns";
             fetchColumns()
         }, []);
 
-        function handleDragEnd(event: DragEndEvent) {
-            const { active, over } = event;
-        
-            if (!over) return;
-        
-            const taskId = active.id as string;
-        
-            setCards((prevCards) =>
-                prevCards.map((card) =>
-                    card.id === taskId ? { ...card } : card
-                )
-                );
-            }
-        
-    
         return (
         <div className="flex h-full w-full gap-3 overflow-x-scroll py-10 px-5">
             <DndContext
-                onDragEnd={handleDragEnd}>
+                >
                 {columns.map((column) => (
                     <Column
                     key={column.id}
@@ -75,68 +78,16 @@ import { Column } from "../components/board/columns";
                     />
             ))}
             </DndContext>
+            {error && <>error here</>}
+            
+            <AddColumnButton onAdd={addColumn} />
         </div>
         );
     };
     
 
 
+
     
     
 
-    export const AddCard = ({ column, setCards }: AddCardProps) => {
-        const [text, setText] = useState("");
-        const [adding, setAdding] = useState(false);
-    
-        const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-            e.preventDefault();
-    
-            if (!text.trim().length) return;
-    
-            const newCard = {
-                status: column,
-                title: text.trim(),
-                id: Math.random().toString(),
-            };
-    
-    
-            setAdding(false);
-        };
-    
-        return (
-            <div className="mt-2">
-                {adding ? (
-                    <motion.form layout onSubmit={handleSubmit}>
-                        <textarea
-                            onChange={(e) => setText(e.target.value)}
-                            placeholder="Add new task..."
-                            className="w-full h-14 rounded text-primary border-primary_low border px-2 focus:outline-primary focus:outline-none bg-primary_low text-sm"
-                        />
-                        <div className="mt-1.5 flex items-center justify-end gap-1.5">
-                            <button
-                                onClick={() => setAdding(false)}
-                                className="px-3 py-1.5 text-xs text-neutral-400 transition-colors hover:text-neutral-50"
-                            >
-                                Close
-                            </button>
-                            <button
-                                type="submit"
-                                className="flex items-center gap-1.5 rounded bg-neutral-50 px-3 py-1.5 text-xs text-neutral-950 transition-colors hover:bg-neutral-300"
-                            >
-                                <span>Add</span>
-                                <FiPlus />
-                            </button>
-                        </div>
-                    </motion.form>
-                ) : (
-                    <motion.button
-                        onClick={() => setAdding(true)}
-                        className="flex w-full items-center gap-1.5 px-3 py-1.5 text-xs text-neutral-400 transition-colors rounded-md hover:bg-secondary hover:text-neutral-50"
-                    >
-                        <span>Add card</span>
-                        <FiPlus />
-                    </motion.button>
-                )}
-            </div>
-        );
-    };
