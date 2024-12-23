@@ -6,12 +6,10 @@ import { Button } from "../components/buttons/button";
 export interface SpaceProp {
     id?: number;
     title: string;
-    description: string;
 }
 
 interface SpaceModalProp {
     closeModal: ()=> void
-    setSpace: React.Dispatch<React.SetStateAction<SpaceProp | null>>;
 }
 
 const dropIn = {
@@ -36,21 +34,46 @@ const dropIn = {
 };
 
 //Under considertion: redirecting Modal button to user profile
-export const BoardModal: React.FC<SpaceModalProp> = ({closeModal, setSpace}) => {
-    const [des, setDescription] = useState('')
-    const [boardName, setBoardName] = useState('')
+export const BoardModal: React.FC<SpaceModalProp> = ({closeModal}) => {
+    const [title, setTitle] = useState('')
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState<string | null>(null)
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const token = localStorage.getItem("authToken")
+    const apiUrl = import.meta.env.VITE_API_URL;
+
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
+        setLoading(true)
 
-        setSpace({
-            
-            title: boardName,
-            description: des,
-        });
-        console.log('Board Created:', { title: boardName, des });
+        if(!token){
+            console.error("No token provided")
+            return
+        }
 
-        closeModal()
+        try {
+            const response = await fetch(`${apiUrl}/boards/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Token ${token}`
+                },
+                body: JSON.stringify({title})
+            });
+            if (!response.ok) {
+                throw new Error(`Failed to create board. Status: ${response.status}`)
+            }
+            setTitle('')
+        }
+        catch(err) {
+            console.error("Error creating board:", err);
+            setError((err as Error).message || "An unexpected error occurred");
+        }
+        finally {
+            setLoading(false)
+            closeModal()
+        }
+
 
     }
 
@@ -60,7 +83,7 @@ export const BoardModal: React.FC<SpaceModalProp> = ({closeModal, setSpace}) => 
             <motion.form onSubmit={handleSubmit}
                 onClick={(e) => e.stopPropagation()}
                 className="bg-accent_low w-[320px] rounded-md
-                    py-2 px-2 flex flex-col"
+                    py-2 px-2 flex flex-col gap-5"
                 variants={dropIn}
                 initial="hidden"
                 animate="visible"
@@ -68,28 +91,21 @@ export const BoardModal: React.FC<SpaceModalProp> = ({closeModal, setSpace}) => 
             >
                 <h1 className="text-center">Create Board</h1>
 
-                <div className="flex flex-col gap-1 mt-5">
+                <div className="flex flex-col gap-1">
                     <label htmlFor="" className="text-[12px] font-bold">
                         Board Title <span className="text-primary">*</span>
                     </label>
                     <input type="text"
-                        value={boardName}
-                        onChange={(e) => setBoardName(e.target.value)}
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
                         className="w-[300px] rounded-sm bg-secondary 
                             focus:outline-none border-[1px] border-accent
                             focus:border-primary p-1"/>
                 </div>
-                <div className="flex flex-col gap-1 mt-5">
-                    <label htmlFor="" className="text-[12px] font-bold">
-                        Description
-                    </label>
-                    <input type="text"
-                        value={des}
-                        onChange={(e) => setDescription(e.target.value)}
-                        className="w-[300px] rounded-sm bg-secondary 
-                            focus:outline-none border-[1px] border-accent
-                            focus:border-primary p-1"/>
-                </div>
+                    <button className="w-[300px] rounded-sm bg-primary text-secondary font-semibold"
+                    >Create Board
+
+                    </button>
                 
                 {/* 
                     <Button

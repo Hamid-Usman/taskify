@@ -6,7 +6,6 @@ import { Link } from "react-router-dom"
 export const UserBoards = () => {
     const [modalOpen, setModalOpen] = useState(false)
     const [board, setBoard] = useState<SpaceProp[]>([])
-    const [space, setSpace] = useState<SpaceProp | null>(null)
 
     const openModal = () => setModalOpen(true)
     const closeModal = () => setModalOpen(false)
@@ -66,6 +65,7 @@ export const UserBoards = () => {
                 <div className="w-[48%] lg:w-[220px] h-[80px] mt-2
                     bg-accent_low text-accent font-bold rounded-md
                     flex justify-center items-center text-[14px] md:text-lg cursor-pointer"
+                    onClick={openModal}
                 >
                     Create a new board
                 </div>
@@ -73,7 +73,6 @@ export const UserBoards = () => {
                 {modalOpen && (
                     <BoardModal
                         closeModal={closeModal}
-                        setSpace={setSpace}
                     />
                 )}
             </div>
