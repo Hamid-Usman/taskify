@@ -10,6 +10,8 @@ type ColumnProps = {
   columnID: number;
 };
 
+
+const apiUrl = import.meta.env.VITE_API_URL;
 export const Column = ({ title, columnID }: ColumnProps) => {
   const [cards, setCards] = useState<CardType[]>([]);
   const [columnTitle, setColumnTitle] = useState(title);
@@ -18,10 +20,17 @@ export const Column = ({ title, columnID }: ColumnProps) => {
   const [columnData, setColumnData] = useState<ColumnType | null>(null);
   const [newCardText, setNewCardText] = useState<string>("");
   const [isAdding, setIsAdding] = useState(false);
-
+  
+  const token = 'c7188fd115c03c6d2b31f6dcce1cca586cbe2a41';
   const fetchCards = async (columnID: number) => {
     try {
-      const response = await fetch(`http://127.0.0.1:8000/columns/${columnID}/cards/`);
+      const response = await fetch(`${apiUrl}/columns/${columnID}/cards/`,{
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            "Authorization": `Token ${token}`,
+            },
+        });
       if (!response.ok) {
         throw new Error(`Failed to fetch cards. Status: ${response.status}`);
       }
@@ -38,7 +47,7 @@ export const Column = ({ title, columnID }: ColumnProps) => {
 
   const fetchColumnData = async (columnID: number) => {
     try {
-      const response = await fetch(`http://127.0.0.1:8000/columns/${columnID}/`);
+      const response = await fetch(`${apiUrl}/columns/${columnID}/`);
       if (!response.ok) {
         throw new Error(`Failed to fetch column data. Status: ${response.status}`);
       }
@@ -64,7 +73,7 @@ export const Column = ({ title, columnID }: ColumnProps) => {
 
   const handleTitleSave = async (newTitle: string) => {
     try {
-      const response = await fetch(`http://127.0.0.1:8000/columns/${columnID}/`, {
+      const response = await fetch(`${apiUrl}/columns/${columnID}/`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -92,9 +101,13 @@ export const Column = ({ title, columnID }: ColumnProps) => {
       if (!newCardText.trim()) return;
       setIsAdding(true);
       try {
-          const response = await fetch(`http://127.0.0.1:8000/cards/`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
+          const response = await fetch(`${apiUrl}/cards/`, {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+                  "Authorization": `Token ${token}`,
+                  },
+        
               body: JSON.stringify({ task: newCardText.trim(), column: columnID }),
           });
           if (!response.ok) throw new Error("Failed to add card");

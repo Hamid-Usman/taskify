@@ -7,10 +7,17 @@ const CardsList: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
+  
+  const apiUrl = import.meta.env.VITE_API_URL;
+  const token = 'c7188fd115c03c6d2b31f6dcce1cca586cbe2a41';
   useEffect(() => {
     const fetchCards = async () => {
       try {
-        const response = await fetch("http://127.0.0.1:8000/cards/");
+        const response = await fetch(`${apiUrl}/cards/`, {headers: {
+          'Content-Type': 'application/json',
+          "Authorization": `Token ${token}`,
+          },
+        });
         if (!response.ok) {
           throw new Error("Failed to fetch cards");
         }

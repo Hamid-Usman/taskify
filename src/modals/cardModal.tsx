@@ -21,6 +21,9 @@ export const CardModal: React.FC<CardTypeProp> = ({ closeModal, card }) => {
     const [error, setError] = useState<string | null>(null);
     const [edit, setEditing] = useState<boolean>(false);
     
+    const token = 'c7188fd115c03c6d2b31f6dcce1cca586cbe2a41';
+    const apiUrl = import.meta.env.VITE_API_URL;
+    
     const openEdit = () => setEditing(true)
     const closeEdit = () => setEditing(false)
 
@@ -37,10 +40,11 @@ export const CardModal: React.FC<CardTypeProp> = ({ closeModal, card }) => {
         setError(null);
 
         try {
-            const response = await fetch(`http://127.0.0.1:8000/cards/${card.id}/`, {
+            const response = await fetch(`${apiUrl}/cards/${card.id}/`, {
                 method: 'PATCH',
                 headers: {
                     "Content-Type": "application/json",
+                    "Authorization": `Token ${token}`,
                 },
                 body: JSON.stringify({
                     due_date: dueDate,
