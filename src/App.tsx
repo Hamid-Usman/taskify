@@ -14,7 +14,7 @@ return (
             <Route path='/' element={<Index />} />
             <Route path='/home' element={<Home />} />
             <Route path='/register' element={<Register />} />
-            <Route path='/board' element={<CustomKanban />} />
+            <Route path='/board/:pk' element={<CustomKanban />} />
             <Route path='/profile' element={<Profile />} />
         </Routes>
     </Router>

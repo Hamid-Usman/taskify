@@ -20,7 +20,7 @@ export const Header = () => {
                 className=" z-20"/>
                 */}
             </div>
-            <Link to='/' className="text-accent text-[20px] font-bold">Taskify</Link>
+            <Link to='/home' className="text-accent text-[20px] font-bold">Taskify</Link>
 
             {/* functions for medium and above screen */}
             <button

@@ -3,6 +3,7 @@ export type ColumnType = {
     id: number;
     title: string;
     order: number;
+    cards: CardType[];
 };
 
 export type CardType = {

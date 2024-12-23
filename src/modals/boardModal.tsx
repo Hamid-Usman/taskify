@@ -4,8 +4,9 @@ import { motion } from "framer-motion";
 import { Button } from "../components/buttons/button";
 
 export interface SpaceProp {
+    id?: number;
     title: string;
-    description: string
+    description: string;
 }
 
 interface SpaceModalProp {
@@ -43,6 +44,7 @@ export const BoardModal: React.FC<SpaceModalProp> = ({closeModal, setSpace}) => 
         e.preventDefault()
 
         setSpace({
+            
             title: boardName,
             description: des,
         });
@@ -88,10 +90,14 @@ export const BoardModal: React.FC<SpaceModalProp> = ({closeModal, setSpace}) => 
                             focus:outline-none border-[1px] border-accent
                             focus:border-primary p-1"/>
                 </div>
-
-                <Button>
-                    Create Workspace
-                </Button>
+                
+                {/* 
+                    <Button
+                        classname=""
+                        onClick={}>
+                        Create Workspace
+                    </Button> 
+                */}
             </motion.form>
         </Backdrop>
     );
