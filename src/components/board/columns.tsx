@@ -12,6 +12,8 @@ type ColumnProps = {
 
 
 const apiUrl = import.meta.env.VITE_API_URL;
+const token = localStorage.getItem("authToken");
+
 export const Column = ({ title, columnID }: ColumnProps) => {
   const [cards, setCards] = useState<CardType[]>([]);
   const [columnTitle, setColumnTitle] = useState(title);
@@ -21,7 +23,7 @@ export const Column = ({ title, columnID }: ColumnProps) => {
   const [newCardText, setNewCardText] = useState<string>("");
   const [isAdding, setIsAdding] = useState(false);
   
-  const token = 'c7188fd115c03c6d2b31f6dcce1cca586cbe2a41';
+  
   const fetchCards = async (columnID: number) => {
     try {
       const response = await fetch(`${apiUrl}/columns/${columnID}/cards/`,{
@@ -47,7 +49,12 @@ export const Column = ({ title, columnID }: ColumnProps) => {
 
   const fetchColumnData = async (columnID: number) => {
     try {
-      const response = await fetch(`${apiUrl}/columns/${columnID}/`);
+      const response = await fetch(`${apiUrl}/columns/${columnID}/`, {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Token ${token}`,
+        }
+    });
       if (!response.ok) {
         throw new Error(`Failed to fetch column data. Status: ${response.status}`);
       }

@@ -15,6 +15,9 @@ type BoardType = {
 };
 
 const apiUrl = import.meta.env.VITE_API_URL;
+            
+const token = localStorage.getItem("authToken");
+
 
 export const CustomKanban = () => {
     const { pk } = useParams<{ pk: string }>();
@@ -38,7 +41,6 @@ const Board = ({ boardID }: { boardID: number }) => {
     const [board, setBoard] = useState<BoardType | null>(null);
     const [error, setError] = useState<string | null>(null);
 
-    const token = 'c7188fd115c03c6d2b31f6dcce1cca586cbe2a41';
 
     const addColumn = async (title: string) => {
     if(!token) {
@@ -80,6 +82,11 @@ const Board = ({ boardID }: { boardID: number }) => {
 
     useEffect(() => {
         const fetchBoard = async () => {
+
+            if(!token) {
+                console.error("No token provided");
+                return;
+            }
             try {
                 const response = await fetch(`${apiUrl}/boards/${boardID}/board/`, {
                         

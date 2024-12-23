@@ -21,9 +21,9 @@ export const CardModal: React.FC<CardTypeProp> = ({ closeModal, card }) => {
     const [error, setError] = useState<string | null>(null);
     const [edit, setEditing] = useState<boolean>(false);
     
-    const token = 'c7188fd115c03c6d2b31f6dcce1cca586cbe2a41';
+    const token = localStorage.getItem("authToken");
     const apiUrl = import.meta.env.VITE_API_URL;
-    
+
     const openEdit = () => setEditing(true)
     const closeEdit = () => setEditing(false)
 

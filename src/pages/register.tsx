@@ -1,6 +1,5 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button } from "../components/buttons/button"; // Ensure you have a Button component
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -42,7 +41,7 @@ export const Register = () => {
       }
 
       // Handle success (e.g., navigate to login page)
-      navigate("/");
+      navigate("/login");
     } catch (err) {
       console.error("Error creating user:", err);
       setError((err as Error).message || "An unexpected error occurred");

@@ -9,15 +9,17 @@ const CardsList: React.FC = () => {
 
   
   const apiUrl = import.meta.env.VITE_API_URL;
-  const token = 'c7188fd115c03c6d2b31f6dcce1cca586cbe2a41';
+  const token = localStorage.getItem("authToken");
+
   useEffect(() => {
     const fetchCards = async () => {
       try {
-        const response = await fetch(`${apiUrl}/cards/`, {headers: {
-          'Content-Type': 'application/json',
-          "Authorization": `Token ${token}`,
-          },
-        });
+        const response = await fetch(`${apiUrl}/cards/`, {
+          headers: {
+            'Content-Type': 'application/json',
+            "Authorization": `Token ${token}`,
+            },
+          });
         if (!response.ok) {
           throw new Error("Failed to fetch cards");
         }
