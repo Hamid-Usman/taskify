@@ -4,6 +4,7 @@ import { BoardInput } from "./boardInput";
 import { Card } from "./cards";
 import { motion } from "framer-motion";
 import { FiPlus } from "react-icons/fi";
+import { useDroppable } from "@dnd-kit/core";
 
 type ColumnProps = {
   title: string;
@@ -15,6 +16,9 @@ const apiUrl = import.meta.env.VITE_API_URL;
 const token = localStorage.getItem("authToken");
 
 export const Column = ({ title, columnID }: ColumnProps) => {
+  const {setNodeRef} = useDroppable ({
+    id: columnID.toString()
+  })
   const [cards, setCards] = useState<CardType[]>([]);
   const [columnTitle, setColumnTitle] = useState(title);
   const [loading, setLoading] = useState<boolean>(true);
@@ -145,7 +149,9 @@ export const Column = ({ title, columnID }: ColumnProps) => {
 
 
       {/* Cards Container */}
-      <div className="min-h-fit mb-2 bg-black p-3 rounded-md w-[240px] transition-colors flex flex-col gap-2">
+      <div className="min-h-fit mb-2 bg-black p-3 rounded-md w-[240px] transition-colors flex flex-col gap-2"
+        ref={setNodeRef}
+      >
         {loading ? (
           <div>Loading...</div>
         ) : error ? (
@@ -159,7 +165,7 @@ export const Column = ({ title, columnID }: ColumnProps) => {
             </button>
           </div>
         ) : cards.length >  0 ? (
-          cards.map((card) => <Card key={card.id} card={card} />)
+          cards.map((card) => <Card key={card.id} card={card} columnID={card.column} />)
         ) : (
           <div>No cards available</div>
         )}

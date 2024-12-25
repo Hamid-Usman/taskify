@@ -41,7 +41,7 @@ const CardsList: React.FC = () => {
   return (
     <div className="grid grid-cols-1 gap-4">
       {cards.map((card) => (
-        <Card key={card.id} card={card} />
+        <Card key={card.id} card={card} columnID={card.column} />
       ))}
     </div>
   );
