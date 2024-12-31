@@ -65,6 +65,32 @@ export const CardModal: React.FC<CardTypeProp> = ({ closeModal, card }) => {
         }
     };
 
+    const handleDelete = async () => {
+        setLoading(true);
+        setError(null);
+
+        try {
+            const response = await fetch(`${apiUrl}/cards/${card.id}/`, {
+                method: 'DELETE',
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Token ${token}`,
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to delete card');
+            }
+            console.log("Deleted!");
+            closeModal(); // Close the modal on success
+        } catch (err) {
+            setError((err as Error).message || "An unexpected error occurred");
+        } finally {
+            setLoading(false);
+
+        }
+    }
+
     return (
         <Backdrop onClick={closeModal}>
             <motion.div
@@ -86,7 +112,7 @@ export const CardModal: React.FC<CardTypeProp> = ({ closeModal, card }) => {
                             ) : (
                                 <p>{task}</p>
                             )}
-                            <span>
+                            <span onClick={handleDelete} className="cursor-pointer hover:text-primary transition duration-300">
                                 <MdDeleteForever />
                             </span>
                         </label>
