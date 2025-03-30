@@ -1,3 +1,4 @@
+
 import { UserBoards } from "../components/board/boards"
 import { Header } from "../components/header/header"
 
@@ -17,7 +18,7 @@ export const Home = () => {
                                 A
                         </div>
                         <div>
-                            <h1 className="font-bold text-xl">Endurecido</h1>
+                            <h1 className="font-bold text-xl">Welcome to your page!</h1>
                             <p className="text-[13px]">Private</p>
                         </div>
                     </div>

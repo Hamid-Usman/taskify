@@ -1,4 +1,4 @@
-import { CardType } from "../props/cardColumn";
+{/* import { CardType } from "../props/cardColumn";
 
 export const DEFAULT_CARDS: CardType[] = [
     // BACKLOG
@@ -26,4 +26,4 @@ export const DEFAULT_CARDS: CardType[] = [
     id: "10",
     status: "done",
     },
-];
+]; */}

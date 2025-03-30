@@ -1,6 +1,6 @@
 import profileHeader from "../../assets/waistup-shot-relaxed-relieved-happy-african-american-young-female-student-striped-tshirt.jpg"
 import { Link } from "react-router-dom"
-import { Button } from "../buttons/button"
+//import { Button } from "../buttons/button"
 export const EditProfile = () => {
     return (
         <div className="px-5 md:px-20 lg:px-96 mt-14 flex flex-col items-center">
@@ -26,7 +26,6 @@ export const EditProfile = () => {
                         <textarea className="px-2 rounded bg-accent_low border h-[90px] w-[320px]"
                             placeholder="<H1>Hello, World!</H1>"/>
                     </div>
-                    <Button>Save</Button>
                 </form>
             </div>
         </div>

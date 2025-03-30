@@ -17,6 +17,8 @@ export default {
 		gray: '#545454',
 		primary_low: '#f2903b1e',
 		black: '#010B13',
+		error: '#DC143C',
+		error_subtle: '#f2738e'
 	},
 	extend: {
 		borderRadius: {

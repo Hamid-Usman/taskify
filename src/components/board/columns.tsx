@@ -1,5 +1,6 @@
 import { FormEvent, useEffect, useState } from "react";
-import { CardType, ColumnType } from "../../props/cardColumn";
+//import { CardType, ColumnType } from "../../props/cardColumn";
+import { CardType } from "../../props/cardColumn";
 import { BoardInput } from "./boardInput";
 import { Card } from "./cards";
 import { motion } from "framer-motion";
@@ -23,7 +24,7 @@ export const Column = ({ title, columnID }: ColumnProps) => {
   const [columnTitle, setColumnTitle] = useState(title);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [columnData, setColumnData] = useState<ColumnType | null>(null);
+  //const [columnData, setColumnData] = useState<ColumnType | null>(null);
   const [newCardText, setNewCardText] = useState<string>("");
   const [isAdding, setIsAdding] = useState(false);
   
@@ -62,8 +63,8 @@ export const Column = ({ title, columnID }: ColumnProps) => {
       if (!response.ok) {
         throw new Error(`Failed to fetch column data. Status: ${response.status}`);
       }
-      const data = await response.json();
-      setColumnData(data);
+      //const data = await response.json();
+      //setColumnData(data);
     } catch (err) {
       console.error("Error fetching column data:", err);
       setError((err as Error).message || "An unexpected error occurred");
@@ -88,6 +89,7 @@ export const Column = ({ title, columnID }: ColumnProps) => {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Token ${token}`
         },
         body: JSON.stringify({
           title: newTitle, // Use the newTitle parameter here

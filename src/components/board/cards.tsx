@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { CardType } from "../../props/cardColumn";
 import { motion } from "framer-motion";
-import { useDraggable, useDroppable } from "@dnd-kit/core";
+import { useDraggable } from "@dnd-kit/core";
 import clsx from "clsx";
 import { CardModal } from "../../modals/cardModal";
 

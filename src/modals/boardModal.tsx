@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Backdrop from "./backdrop";
 import { motion } from "framer-motion";
-import { Button } from "../components/buttons/button";
+import Loader from "../components/ui/loading";
 
 export interface SpaceProp {
     id?: number;
@@ -74,6 +74,10 @@ export const BoardModal: React.FC<SpaceModalProp> = ({closeModal}) => {
             closeModal()
         }
 
+        {loading && (
+            <Loader />
+        )}
+
 
     }
 
@@ -106,6 +110,7 @@ export const BoardModal: React.FC<SpaceModalProp> = ({closeModal}) => {
                     >Create Board
 
                     </button>
+                    {error && <p className="text-error_subtle">{error}</p>}
                 
                 {/* 
                     <Button

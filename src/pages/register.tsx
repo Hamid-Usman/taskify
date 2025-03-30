@@ -1,47 +1,75 @@
-import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Input from "../components/formInput/input";
+
+// Validation Schema
+const schema = yup.object().shape({
+  firstName: yup.string().required("First name is required"),
+  lastName: yup.string().required("Last name is required"),
+  email: yup.string().email("Invalid email").required("Email is required"),
+  password: yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
+  re_password: yup
+    .string()
+    .oneOf([yup.ref("password")], "Passwords must match")
+    .required("Confirm password is required"),
+});
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
+interface RegisterFormData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  re_password: string;
+}
+
 export const Register = () => {
-  const [firstname, setFirstname] = useState("");
-  const [lastname, setLastname] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [rePassword, setRePassword] = useState("");
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<RegisterFormData>({
+    resolver: yupResolver(schema),
+  });
+
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (password !== rePassword) {
-      setError("Passwords do not match");
-      return;
-    }
-
+  const onSubmit = async (data: RegisterFormData) => {
+    setError(null); // Reset error before submitting
+ 
     try {
       const response = await fetch(`${apiUrl}/auth/users/`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          firstname,
-          lastname,
-          email,
-          password,
-          re_password: password
+          firstname: data.firstName, // ✅ Corrected field name
+          lastname: data.lastName,   // ✅ Corrected field name
+          email: data.email,
+          password: data.password,
+          re_password: data.re_password,
         }),
       });
 
+      const responseData = await response.json();
+
       if (!response.ok) {
-        throw new Error("Failed to create user");
-        console.log(response.json());
+        console.error("API Response Error:", responseData);
+        throw new Error(
+          responseData?.email?.[0] ||
+          responseData?.non_field_errors?.[0] ||
+          responseData?.password?.[0] ||
+          "Failed to create user"
+        );
       }
 
-      // Handle success (e.g., navigate to login page)
+      console.log("Success:", responseData);
       navigate("/login");
+
     } catch (err) {
       console.error("Error creating user:", err);
       setError((err as Error).message || "An unexpected error occurred");
@@ -50,76 +78,22 @@ export const Register = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
-      <form onSubmit={handleSubmit} className="bg-secondary p-6 rounded-md shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-4">Register</h2>
-        {error && <div className="text-red-500 mb-4">{error}</div>}
-        <div className="flex flex-col gap-1 mb-4">
-          <label htmlFor="username" className="font-bold">
-            Firstname
-          </label>
-          <input
-            type="text"
-            name="firstname"
-            value={firstname}
-            onChange={(e) => setFirstname(e.target.value)}
-            className="rounded-md p-1 py-3 bg-accent text-secondary"
-            required
-          />
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="bg-secondary p-6 rounded-md shadow-lg shadow-secondary_low w-full max-w-xl"
+      >
+        <h2 className="text-2xl font-bold mb-8">Register to get started</h2>
+        {error && <div className="text-red-500 N-4">{error}</div>}
+
+       <div className="sm:grid grid-cols-2 gap-4">
+          <Input label="First Name" type="text" register={register("firstName")} error={errors.firstName} />
+          <Input label="Last Name" type="text" register={register("lastName")} error={errors.lastName} />
+          <Input label="Email Address" type="email" register={register("email")} error={errors.email} />
+          <Input label="Password" type="password" register={register("password")} error={errors.password} />
+          <Input label="Confirm Password" type="password" register={register("re_password")} error={errors.re_password} />
         </div>
-        <div className="flex flex-col gap-1 mb-4">
-          <label htmlFor="username" className="font-bold">
-            Lastname
-          </label>
-          <input
-            type="text"
-            name="lastname"
-            value={lastname}
-            onChange={(e) => setLastname(e.target.value)}
-            className="rounded-md p-1 py-3 bg-accent text-secondary"
-            required
-          />
-        </div>
-        <div className="flex flex-col gap-1 mb-4">
-          <label htmlFor="email" className="font-bold">
-            Email
-          </label>
-          <input
-            type="email"
-            name="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="rounded-md p-1 py-3 bg-accent text-secondary"
-            required
-          />
-        </div>
-        <div className="flex flex-col gap-1 mb-4">
-          <label htmlFor="password" className="font-bold">
-            Password
-          </label>
-          <input
-            type="password"
-            name="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="rounded-md p-1 py-3 bg-accent text-secondary"
-            required
-          />
-        </div>
-        <div className="flex flex-col gap-1 mb-4">
-          <label htmlFor="confirmPassword" className="font-bold">
-            Confirm Password
-          </label>
-          <input
-            type="password"
-            name="rePassword"
-            value={rePassword}
-            onChange={(e) => setRePassword(e.target.value)}
-            className="rounded-md p-1 py-3 bg-accent text-secondary"
-            required
-          />
-        </div>
-        <button type="submit" className="w-full py-3 bg-primary text-secondary rounded-md"
-        >
+
+        <button type="submit" className="w-full py-3 bg-primary text-secondary rounded-md">
           Register
         </button>
       </form>

@@ -6,6 +6,7 @@ import { DndContext, DragEndEvent, DragStartEvent } from "@dnd-kit/core";
 import { Column } from "../components/board/columns";
 import { AddColumnButton } from "../components/board/addColumn";
 import { useParams } from "react-router-dom";
+import Loader from "../components/ui/loading";
 
 type BoardType = {
   id: number;
@@ -119,16 +120,26 @@ const Board = ({ boardID }: { boardID: number }) => {
       setActiveCard(null);
       return;
     }
-
+  
     const initialColumn = board?.columns.find((col) =>
       col.cards.some((card) => card.id.toString() === active.id)
     );
     const targetColumn = board?.columns.find((col) =>
       col.id.toString() === over.id
     );
-
+  
     if (!initialColumn || !targetColumn) return;
-
+  
+    // Ensure valid position
+    const newPosition = targetColumn.cards.length;
+  
+    const payload = {
+      target_column_id: targetColumn.id,
+      new_position: newPosition,
+    };
+  
+    console.log("Moving card with payload:", payload); // Debugging
+  
     try {
       const response = await fetch(`${apiUrl}/cards/${active.id}/move/`, {
         method: "PATCH",
@@ -136,20 +147,19 @@ const Board = ({ boardID }: { boardID: number }) => {
           "Content-Type": "application/json",
           "Authorization": `Token ${token}`,
         },
-        body: JSON.stringify({
-          target_column_id: targetColumn.id,
-          new_position: targetColumn.cards.length, // Optional: You might want to set the card's position in the column
-        }),
+        body: JSON.stringify(payload),
       });
-
+  
       if (!response.ok) {
-        throw new Error("Failed to update card position");
+        const errorData = await response.json();
+        console.error("API Error Response:", errorData);
+        throw new Error(errorData.error || "Failed to update card position");
       }
-
-      // Optimistically update the UI
+  
+      // Optimistically update UI
       setBoard((prevBoard) => {
         if (!prevBoard) return prevBoard;
-
+  
         const updatedColumns = prevBoard.columns.map((col) => {
           if (col.id === initialColumn.id) {
             return {
@@ -165,19 +175,17 @@ const Board = ({ boardID }: { boardID: number }) => {
             return col;
           }
         });
-
-        return {
-          ...prevBoard,
-          columns: updatedColumns,
-        };
+  
+        return { ...prevBoard, columns: updatedColumns };
       });
-
+  
       setActiveCard(null);
     } catch (err) {
       console.error("Error updating card position:", err);
       setError((err as Error).message || "An unexpected error occurred");
     }
   };
+  
 
   if (error) {
     return (
@@ -188,7 +196,7 @@ const Board = ({ boardID }: { boardID: number }) => {
   }
 
   if (!board) {
-    return <div className="text-white">Loading...</div>;
+    return <div className="text-white"><Loader /> </div>;
   }
 
   return (
