@@ -22,7 +22,7 @@ export const Card = ({ card }: CardProp) => {
   const style = transform
     ? {
         transform: `translate(${transform.x}px, ${transform.y}px)`,
-        backgroundColor: isDragging ? "var(--primary)" : "var(--accent)",
+        backgroundColor: isDragging ? "var(--primary)" : "",
       }
     : undefined;
 
@@ -36,7 +36,11 @@ export const Card = ({ card }: CardProp) => {
         key={card.id}
         className={clsx(
           "p-3 active:cursor-grabbing transition-colors duration-200 rounded-lg",
-          isDragging ? "rotate-45 opacity-50 bg-gray-200" : "bg-secondary shadow"
+          isDragging && "rotate-45 opacity-50",
+          card.priority === "high" && "border-2 border-red-500",
+          card.priority === "medium" && "border-2 border-yellow-500",
+          card.priority === "low" && "border-2 border-green-500",
+          card.priority === "backlog" && "border-2 border-secondary bg-secondary_low"
         )}
         style={{ touchAction: "none", ...style }} // Apply styles dynamically
       >

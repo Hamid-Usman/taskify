@@ -13,4 +13,5 @@ export type CardType = {
     description: string;
     due_date: string;
     column: number;
+    priority: string;
 };
