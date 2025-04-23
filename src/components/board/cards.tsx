@@ -10,9 +10,21 @@ interface CardProp {
   columnID: number; // Pass the columnID for proper drag/drop handling
 }
 
+const getPriorityClasses = (priority: string): string => {
+  switch (priority) {
+    case "Prioritize": return "border-2 border-error bg-error_subtle";
+    case "Completed": return "border-2 border-green bg-green_subtle";
+    case "In Progress": return "border-2 border-primary bg-primary_low";
+    case "To-do": return "border-secondary bg-secondary_low";
+    default: return "";
+  }
+};
 export const Card = ({ card }: CardProp) => {
   const [modalOpen, setModalOpen] = useState(false);
-  const openModal = () => setModalOpen(true);
+  const openModal = () => {
+    console.log("Card clicked:");
+    setModalOpen(true);
+  }
   const closeModal = () => setModalOpen(false);
 
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
@@ -26,6 +38,7 @@ export const Card = ({ card }: CardProp) => {
       }
     : undefined;
 
+
   return (
     <div className="rounded">
       <motion.div
@@ -36,16 +49,14 @@ export const Card = ({ card }: CardProp) => {
         key={card.id}
         className={clsx(
           "p-3 active:cursor-grabbing transition-colors duration-200 rounded-lg",
-          isDragging && "rotate-45 opacity-50",
-          card.priority === "high" && "border-2 border-red-500",
-          card.priority === "medium" && "border-2 border-yellow-500",
-          card.priority === "low" && "border-2 border-green-500",
-          card.priority === "backlog" && "border-2 border-secondary bg-secondary_low"
+          isDragging && "rotate-45 opacity-50", getPriorityClasses(card.priority ?? "To-do"), // Add dynamic classes based on priority
         )}
         style={{ touchAction: "none", ...style }} // Apply styles dynamically
       >
         <p className="font-bold">{card.task}</p>
-        <p className="text-sm text-gray-500">Due: {new Date(card.due_date).toLocaleDateString()}</p>
+        <p className="text-sm text-gray-500">
+          Due: {card.due_date ? new Date(card.due_date).toLocaleDateString() : "No due date"}
+        </p>
       </motion.div>
 
       {/* Modal to show card details */}

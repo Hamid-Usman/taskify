@@ -8,10 +8,10 @@ export type ColumnType = {
 
 export type CardType = {
     id: number;
-    task: string;
-    position: number;
-    description: string;
-    due_date: string;
-    column: number;
-    priority: string;
+    task?: string;
+    position?: number;
+    description?: string;
+    due_date?: string;
+    column?: number;
+    priority?: string;
 };

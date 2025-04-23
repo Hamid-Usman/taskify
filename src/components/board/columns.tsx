@@ -168,7 +168,7 @@ export const Column = ({ title, columnID }: ColumnProps) => {
           </div>
         ) : cards.length >  0 ? (
           cards.map((card) => 
-          <Card key={card.id} card={card} columnID={card.column} />)
+          <Card key={card.id} card={card} columnID={card.column ?? columnID} />)
         ) : (
           <div>No cards available</div>
         )}

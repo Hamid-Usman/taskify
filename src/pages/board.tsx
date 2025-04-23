@@ -38,7 +38,6 @@ const Board = ({ boardID }: { boardID: number }) => {
   const [board, setBoard] = useState<BoardType | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [activeCard, setActiveCard] = useState<CardType | null>(null);
-
   useEffect(() => {
     const fetchBoard = async () => {
       const token = localStorage.getItem("authToken");
@@ -134,12 +133,15 @@ const Board = ({ boardID }: { boardID: number }) => {
     const newPosition = targetColumn.cards.length;
   
     const payload = {
+      card_id: activeCard.id,
       target_column_id: targetColumn.id,
       new_position: newPosition,
     };
   
     console.log("Moving card with payload:", payload); // Debugging
-  
+    
+    
+
     try {
       const response = await fetch(`${apiUrl}/cards/${active.id}/move/`, {
         method: "PATCH",
@@ -159,14 +161,14 @@ const Board = ({ boardID }: { boardID: number }) => {
       // Optimistically update UI
       setBoard((prevBoard) => {
         if (!prevBoard) return prevBoard;
-  
-        const updatedColumns = prevBoard.columns.map((col) => {
-          if (col.id === initialColumn.id) {
+    
+        const revertedColumns = prevBoard.columns.map((col) => {
+          if (col.id === targetColumn.id) {
             return {
               ...col,
               cards: col.cards.filter((card) => card.id !== activeCard.id),
             };
-          } else if (col.id === targetColumn.id) {
+          } else if (col.id === initialColumn.id) {
             return {
               ...col,
               cards: [...col.cards, activeCard],
@@ -175,8 +177,8 @@ const Board = ({ boardID }: { boardID: number }) => {
             return col;
           }
         });
-  
-        return { ...prevBoard, columns: updatedColumns };
+    
+        return { ...prevBoard, columns: revertedColumns };
       });
   
       setActiveCard(null);

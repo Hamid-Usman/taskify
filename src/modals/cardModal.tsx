@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { CardType } from "../props/cardColumn";
 import Backdrop from "./backdrop";
-import { MdOutlineSubtitles, MdDeleteForever } from "react-icons/md";
+import { MdOutlineSubtitles, MdDeleteForever, MdPriorityHigh } from "react-icons/md";
 import { GiNotebook } from "react-icons/gi";
 import { SlCalender } from "react-icons/sl";
 import { motion } from "framer-motion";
@@ -13,10 +13,9 @@ export interface CardTypeProp {
     card: CardType;
 }
 
-export const CardModal: React.FC<CardTypeProp> = ({ closeModal, card }) => {
-    const [dueDate, setDueDate] = useState<string>(card.due_date);
-    const [description, setDescription] = useState<string>(card.description);
-    const [task, setTask] = useState<string>(card.task);
+export const CardModal: React.FC<CardTypeProp> = ({ closeModal, card}) => {
+    const [cardData, setCardData] = useState<CardType>(card);
+
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
     const [edit, setEditing] = useState<boolean>(false);
@@ -27,12 +26,12 @@ export const CardModal: React.FC<CardTypeProp> = ({ closeModal, card }) => {
     const openEdit = () => setEditing(true)
     const closeEdit = () => setEditing(false)
 
-    const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setDueDate(e.target.value);
-    };
-
-    const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        setDescription(e.target.value);
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+        const { name, value } = e.target;
+        setCardData((prevData) => ({
+            ...prevData,
+            [name]: value,
+        }));
     };
 
     const handleSave = async () => {
@@ -47,9 +46,10 @@ export const CardModal: React.FC<CardTypeProp> = ({ closeModal, card }) => {
                     "Authorization": `Token ${token}`,
                 },
                 body: JSON.stringify({
-                    due_date: dueDate,
-                    description: description,
-                    task: task, // Send updated task if needed
+                    due_date: cardData.due_date,
+                    description: cardData.description,
+                    task: cardData.task,
+                    priority: cardData.priority,
                 }),
             });
 
@@ -105,12 +105,13 @@ export const CardModal: React.FC<CardTypeProp> = ({ closeModal, card }) => {
                             {edit ? (
                                 <input
                                     type="text"
-                                    value={task}
-                                    onChange={(e) => setTask(e.target.value)}
+                                    name="task"
+                                    value={cardData.task}
+                                    onChange={handleChange}
                                     className="p-2 bg-accent_low rounded-lg"
                                 />
                             ) : (
-                                <p>{task}</p>
+                                <p>{cardData.task}</p>
                             )}
                             <span onClick={handleDelete} className="cursor-pointer hover:text-primary transition duration-300">
                                 <MdDeleteForever />
@@ -120,16 +121,30 @@ export const CardModal: React.FC<CardTypeProp> = ({ closeModal, card }) => {
                 </div>
                 <section className="flex flex-col gap-5 mt-5">
                     <div className="flex gap-4">
+                    <MdPriorityHigh  size={25}/>
+                        {edit ? (
+                            <select name="priority" onChange={handleChange} value={cardData.priority} id="Value" className="bg-accent_low px-2 w-[130px]">
+                                <option value="To-do">To-do</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Completed">Completed</option>
+                                <option value="Prioritize">Prioritize</option>
+                            </select>
+                        ) : (
+                            <p>{cardData.priority === "backlog" ? cardData.priority : `${cardData.priority} priority`}</p>
+                        )}
+                    </div>
+                    <div className="flex gap-4">
                         <SlCalender size={25} />
                         {edit ? (
                             <input
                                 type="date"
-                                value={dueDate}
-                                onChange={handleDateChange}
+                                name="due_date"
+                                value={cardData.due_date}
+                                onChange={handleChange}
                                 className="p-2 bg-accent_low rounded-lg"
                             />
                         ) : (
-                            <p>{dueDate}</p>
+                            <p>{cardData.due_date}</p>
                         )}
                     </div>
                     <div className="flex gap-4">
@@ -137,21 +152,25 @@ export const CardModal: React.FC<CardTypeProp> = ({ closeModal, card }) => {
                         <GiNotebook size={25} />
                         {edit ? (
                         <Textarea
-                            value={description}
-                            onChange={handleDescriptionChange}
+                            name="description"
+                            value={cardData.description}
+                            onChange={(e) => handleChange(e)}
                             heading="Description"
                         />
                             ) : (
-                            <p>{description}</p>
+                            <p>{cardData.description}</p>
                             )
                         }
                     </div>
                 </section>
                 {error && <p className="text-red-600">{error}</p>}
                 <div className="ml-10 flex gap-2">
+                    {edit && (
+                        
                     <Button onClick={handleSave} classname={!loading ? "bg-primary text-secondary" : ""}>
-                        {loading ? "Saved..." : "Save"}
-                    </Button>
+                    {loading ? "Saved..." : "Save"}
+                </Button>
+                    )}
                     {!edit ? (
                         
                         <Button onClick={openEdit} classname={"bg-accent_low text-white"}>

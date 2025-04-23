@@ -17,8 +17,11 @@ export default {
 			gray: '#545454',
 			primary_low: '#f2903b1e',
 			black: '#010B13',
-			error: '#DC143C',
-			error_subtle: '#f2738e'
+			
+			green: '#70e000',
+			green_subtle: '#70e0001e',
+			error: '#ef233c',
+			error_subtle: '#f2738e1e'
 
 			
 		},
